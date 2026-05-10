@@ -373,7 +373,7 @@ const AdminDashboard = () => {
         {/* Profile Hub */}
         <div style={{display:'flex', gap:'8px', alignItems:'center', padding:'0.5rem', marginBottom:'0.5rem'}}>
           <div style={{background:'#333', width:32, height:32, borderRadius:4, display:'flex', alignItems:'center', justifyContent:'center', fontWeight:'bold'}}>L</div>
-          <div style={{fontWeight:600, fontSize:'0.85rem'}}>Lumina HQ <ChevronDown size={12} style={{marginLeft:'5px', color:'#888'}}/></div>
+          <div style={{fontWeight:600, fontSize:'0.85rem'}}>Lumina Minimal <ChevronDown size={12} style={{marginLeft:'5px', color:'#888'}}/></div>
         </div>
 
         {/* Search Bar Simulated */}

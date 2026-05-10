@@ -26,7 +26,7 @@ const Navbar = () => {
     >
       <div className="container navbar-inner">
         <div className="nav-brand">
-          <a href="/">LUMINA</a>
+          <a href="/">LUMINA MINIMAL</a>
         </div>
 
         <nav className="nav-links">
