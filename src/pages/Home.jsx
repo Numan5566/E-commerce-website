@@ -2,12 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import { featuredProducts } from '../utils/mockData';
-import heroBg from '../assets/images/hero.png';
+import heroBg from '../assets/images/hero_tech.png';
 import './Home.css';
 
 const Home = () => {
-  const { formatPrice } = useShop();
+  const { formatPrice, products } = useShop();
 
   return (
     <div className="home-page">
@@ -22,7 +21,7 @@ const Home = () => {
             transition={{ delay: 0.2 }}
             className="hero-subtitle"
           >
-            Exclusive Essentials
+            Modern Work & Lifestyle Tech
           </motion.span>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -30,7 +29,7 @@ const Home = () => {
             transition={{ delay: 0.4 }}
             className="hero-title"
           >
-            Elevating Your <br />Everyday Aesthetic.
+            Upgrade Your Desk. <br />Elevate Your Flow.
           </motion.h1>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -38,8 +37,8 @@ const Home = () => {
             transition={{ delay: 0.6 }}
             className="hero-cta"
           >
-            <button className="btn-premium">Explore Collection <ArrowRight size={16} /></button>
-            <button className="btn-outline">Read Essence</button>
+            <button className="btn-premium">Shop Smart Tech <ArrowRight size={16} /></button>
+            <button className="btn-outline">View Bestsellers</button>
           </motion.div>
         </div>
       </section>
@@ -47,12 +46,12 @@ const Home = () => {
       {/* Featured Section */}
       <section className="featured-section container">
         <div className="section-header">
-          <h2>The Curated Edit</h2>
-          <p>Hand-selected signature pieces for global connoisseurs.</p>
+          <h2>Problem-Solving Innovations</h2>
+          <p>Highly curated, functional tech for the ultimate aesthetic setup.</p>
         </div>
 
         <div className="products-grid">
-          {featuredProducts.map((product, idx) => (
+          {products.map((product, idx) => (
             <motion.div 
               key={product.id}
               initial={{ opacity: 0, y: 30 }}
