@@ -12,7 +12,6 @@ const Footer = () => {
         </div>
         <div className="footer-links">
           <span>© 2026 Lumina Store. All Rights Reserved.</span>
-          <Link to="/admin" className="admin-link">Admin Portal</Link>
         </div>
       </div>
     </footer>
