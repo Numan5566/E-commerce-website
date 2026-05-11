@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, ShoppingBag, Globe, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop, regions } from '../context/ShopContext';
+import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -26,7 +27,10 @@ const Navbar = () => {
     >
       <div className="container navbar-inner">
         <div className="nav-brand">
-          <a href="/">LUMINA MINIMAL</a>
+          <a href="/" style={{display:'flex', alignItems:'center', gap:'10px'}}>
+            <img src={logoImg} alt="Lumina" style={{height:'28px', width:'auto'}} />
+            LUMINA MINIMAL
+          </a>
         </div>
 
         <nav className="nav-links">
