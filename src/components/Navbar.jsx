@@ -1,76 +1,105 @@
-import React, { useState } from 'react';
-import { Search, ShoppingBag, Globe, Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, ShoppingBag, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop, regions } from '../context/ShopContext';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
-const Navbar = () => {
-  const { region, setRegion, cart } = useShop();
+const Navbar = ({ onCartOpen }) => {
+  const { region, setRegion, cartCount } = useShop();
   const [isScrolled, setIsScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
 
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <motion.header 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`navbar ${isScrolled ? 'scrolled glass' : ''}`}
-    >
-      <div className="container navbar-inner">
-        <div className="nav-brand">
-          <a href="/" style={{display:'flex', alignItems:'center', gap:'10px'}}>
-            <img src={logoImg} alt="Lumina" style={{height:'28px', width:'auto'}} />
-            LUMINA MINIMAL
-          </a>
-        </div>
+    <>
+      {/* Announcement Bar */}
+      <div className="announcement-bar">
+        ⚡ Free Shipping on orders over $50 &nbsp;|&nbsp; 🌍 Worldwide Delivery &nbsp;|&nbsp; 🔒 Secure Checkout
+      </div>
 
-        <nav className="nav-links">
-          <a href="#">Collections</a>
-          <a href="#">New Arrivals</a>
-          <a href="#">Essence</a>
-        </nav>
-
-        <div className="nav-actions">
-          <div className="lang-selector" onMouseEnter={() => setLangOpen(true)} onMouseLeave={() => setLangOpen(false)}>
-            <button className="action-btn globe-btn">
-              <Globe size={18} />
-              <span>{region.code}</span>
-            </button>
-            <AnimatePresence>
-              {langOpen && (
-                <motion.ul 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="lang-dropdown glass"
-                >
-                  {regions.map(r => (
-                    <li key={r.code} onClick={() => { setRegion(r); setLangOpen(false); }}>
-                      {r.name} ({r.currency})
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
+        className={`navbar ${isScrolled ? 'scrolled' : ''}`}
+        style={{ top: '32px' }}
+      >
+        <div className="container navbar-inner">
+          {/* Brand */}
+          <div className="nav-brand">
+            <a href="/">
+              <img src={logoImg} alt="Lumina" className="nav-logo" />
+              <span className="brand-text">LUMINA</span>
+            </a>
           </div>
 
-          <button className="action-btn"><Search size={20} /></button>
-          <button className="action-btn cart-btn">
-            <ShoppingBag size={20} />
-            {cart.length > 0 && <span className="cart-badge">{cart.length}</span>}
-          </button>
+          {/* Links */}
+          <nav className="nav-links">
+            <a href="#">Collections</a>
+            <a href="#">New Arrivals</a>
+            <a href="#">Bestsellers</a>
+            <a href="#">About</a>
+          </nav>
+
+          {/* Actions */}
+          <div className="nav-actions">
+            {/* Language */}
+            <div
+              className="lang-selector"
+              onMouseEnter={() => setLangOpen(true)}
+              onMouseLeave={() => setLangOpen(false)}
+            >
+              <button className="action-btn globe-btn">
+                <Globe size={15} />
+                <span>{region.code}</span>
+              </button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.ul
+                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                    transition={{ duration: 0.18 }}
+                    className="lang-dropdown"
+                  >
+                    {regions.map(r => (
+                      <li key={r.code} onClick={() => { setRegion(r); setLangOpen(false); }}>
+                        <span>{r.name}</span>
+                        <span style={{ marginLeft: 'auto', opacity: 0.5, fontSize: '0.7rem' }}>{r.currency}</span>
+                      </li>
+                    ))}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Search */}
+            <button className="action-btn" aria-label="Search">
+              <Search size={17} />
+            </button>
+
+            {/* Cart */}
+            <button
+              className="action-btn cart-btn"
+              aria-label="Cart"
+              onClick={onCartOpen}
+            >
+              <ShoppingBag size={17} />
+              <span className="cart-label">Cart</span>
+              {cartCount > 0 && (
+                <span className="cart-badge">{cartCount}</span>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    </motion.header>
+      </motion.header>
+    </>
   );
 };
 
