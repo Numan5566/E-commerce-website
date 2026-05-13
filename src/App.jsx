@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import CartSidebar from './components/CartSidebar';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
+import ProductDetails from './pages/ProductDetails';
 import './App.css';
 
 const AppContent = () => {
@@ -22,6 +23,7 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<Home onCartOpen={() => setCartOpen(true)} />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
         </Routes>
       </main>
       {!isAdmin && <Footer />}

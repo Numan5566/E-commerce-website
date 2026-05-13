@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
   ArrowRight, Truck, ShieldCheck, RefreshCw,
   Star, ChevronDown, Zap, Heart, ShoppingBag,
@@ -279,6 +280,9 @@ const Home = ({ onCartOpen }) => {
               transition={{ delay: idx * 0.15, duration: 0.5 }}
             >
               <div className="card-img-wrapper">
+                <Link to={`/product/${product.id}`} style={{ display: 'block', height: '100%' }}>
+                  <img src={product.image} alt={product.name} />
+                </Link>
                 {product.tag && <span className="tag">{product.tag}</span>}
                 <button
                   className="wishlist-btn"
@@ -290,7 +294,6 @@ const Home = ({ onCartOpen }) => {
                     stroke={wishlisted[product.id] ? '#f43f5e' : 'currentColor'}
                   />
                 </button>
-                <img src={product.image} alt={product.name} />
                 <button
                   className="quick-add"
                   onClick={(e) => handleAddToCart(product, e)}
@@ -300,7 +303,7 @@ const Home = ({ onCartOpen }) => {
                 </button>
               </div>
 
-              <div className="card-info">
+              <Link to={`/product/${product.id}`} className="card-info" style={{ textDecoration: 'none' }}>
                 <span className="card-category">{product.category}</span>
                 <div className="card-name">{product.name}</div>
                 <div className="card-bottom">
@@ -314,7 +317,7 @@ const Home = ({ onCartOpen }) => {
                     {formatPrice(product.price)}
                   </div>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
