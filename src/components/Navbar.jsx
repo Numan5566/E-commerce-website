@@ -5,22 +5,47 @@ import { useShop, regions } from '../context/ShopContext';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
+const announcements = [
+  "🔥 Limited Time 40% OFF Sitewide",
+  "🚚 Free USA Shipping on Orders Above $50",
+  "⭐ Trusted by 10,000+ Happy Customers"
+];
+
 const Navbar = ({ onCartOpen }) => {
   const { region, setRegion, cartCount } = useShop();
   const [isScrolled, setIsScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [announcementIdx, setAnnouncementIdx] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    const interval = setInterval(() => {
+      setAnnouncementIdx(prev => (prev + 1) % announcements.length);
+    }, 4000);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
     <>
       {/* Announcement Bar */}
       <div className="announcement-bar">
-        ⚡ Free Shipping on orders over $50 &nbsp;|&nbsp; 🌍 Worldwide Delivery &nbsp;|&nbsp; 🔒 Secure Checkout
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={announcementIdx}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.3 }}
+          >
+            {announcements[announcementIdx]}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <motion.header
@@ -41,10 +66,12 @@ const Navbar = ({ onCartOpen }) => {
 
           {/* Links */}
           <nav className="nav-links">
-            <a href="#">Collections</a>
+            <a href="/">Home</a>
+            <a href="#">Shop</a>
+            <a href="#">Best Sellers</a>
             <a href="#">New Arrivals</a>
-            <a href="#">Bestsellers</a>
-            <a href="#">About</a>
+            <a href="#">Track Order</a>
+            <a href="#">FAQ</a>
           </nav>
 
           {/* Actions */}

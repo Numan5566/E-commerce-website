@@ -1,13 +1,20 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { X, ShoppingBag, Trash2, ArrowRight, Package } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import './CartSidebar.css';
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, formatPrice } = useShop();
+  const navigate = useNavigate();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  const handleCheckout = () => {
+    onClose();
+    navigate('/checkout');
+  };
 
   return (
     <AnimatePresence>
@@ -98,7 +105,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                   <p className="cart-shipping-note">
                     🚚 Free shipping on orders over $50
                   </p>
-                  <button className="btn-premium" style={{ width: '100%', padding: '1rem', fontSize: '0.95rem' }}>
+                  <button className="btn-premium" onClick={handleCheckout} style={{ width: '100%', padding: '1rem', fontSize: '0.95rem' }}>
                     Checkout <ArrowRight size={16} />
                   </button>
                   <button className="cart-continue" onClick={onClose}>

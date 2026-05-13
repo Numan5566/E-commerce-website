@@ -7,6 +7,8 @@ import CartSidebar from './components/CartSidebar';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import ProductDetails from './pages/ProductDetails';
+import Checkout from './pages/Checkout';
+import SalesPopup from './components/SalesPopup';
 import './App.css';
 
 const AppContent = () => {
@@ -24,12 +26,14 @@ const AppContent = () => {
           <Route path="/" element={<Home onCartOpen={() => setCartOpen(true)} />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </main>
       {!isAdmin && <Footer />}
       {!isAdmin && (
         <CartSidebar isOpen={cartOpen} onClose={() => setCartOpen(false)} />
       )}
+      {!isAdmin && <SalesPopup />}
     </div>
   );
 };

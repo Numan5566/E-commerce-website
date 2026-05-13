@@ -16,6 +16,28 @@ const ProductDetails = () => {
   const [activeImg, setActiveImg] = useState('');
   const [activeTab, setActiveTab] = useState('description');
   const [activeFeature, setActiveFeature] = useState(0);
+  const [liveViewers, setLiveViewers] = useState(14);
+  const [timeLeft, setTimeLeft] = useState({ h: 2, m: 45, s: 12 });
+
+  useEffect(() => {
+    const viewerInterval = setInterval(() => {
+      setLiveViewers(Math.floor(Math.random() * (45 - 12 + 1)) + 12);
+    }, 15000);
+
+    const timerInterval = setInterval(() => {
+      setTimeLeft(prev => {
+        let { h, m, s } = prev;
+        if (s > 0) s--;
+        else { s = 59; if (m > 0) m--; else { m = 59; h--; } }
+        return { h, m, s };
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(viewerInterval);
+      clearInterval(timerInterval);
+    };
+  }, []);
 
   useEffect(() => {
     const found = products.find(p => p.id === parseInt(id));
@@ -86,7 +108,25 @@ const ProductDetails = () => {
           <div className="pdp-price-wrap">
             <span className="current-price">{formatPrice(product.price)}</span>
             <span className="old-price">{formatPrice(product.price * 1.2)}</span>
-            <span className="discount-tag">20% OFF</span>
+            <span className="discount-tag">40% OFF</span>
+          </div>
+
+          <div className="urgency-panel">
+            <div className="live-viewers">
+               🔥 <strong>{liveViewers} people</strong> are viewing this right now
+            </div>
+            <div className="stock-alert">
+               <div className="stock-dot pulse"></div>
+               Only <strong>{product.stock || 7} items</strong> left in stock - order soon
+            </div>
+            <div className="countdown-timer">
+               Hurry! Offer ends in: 
+               <div className="time-blocks">
+                 <span>{String(timeLeft.h).padStart(2, '0')}</span> :
+                 <span>{String(timeLeft.m).padStart(2, '0')}</span> :
+                 <span>{String(timeLeft.s).padStart(2, '0')}</span>
+               </div>
+            </div>
           </div>
 
           <div className="pdp-variant-selector">

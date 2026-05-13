@@ -1,441 +1,237 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Truck, ShieldCheck, RefreshCw,
-  Star, ChevronDown, Zap, Heart, ShoppingBag,
-  Package, Headphones, Award, Globe, CircleCheck
+  Star, Zap, Heart, ShoppingBag,
+  Award, ChevronLeft, ChevronRight, X, Mail
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
-import heroBg from '../assets/images/hero_tech.png';
 import './Home.css';
 
-/* ─── Countdown Timer ───────────────────────── */
-function useCountdown() {
-  const getTime = () => {
-    const end = new Date();
-    end.setHours(23, 59, 59, 0);
-    const diff = end - new Date();
-    return {
-      h: String(Math.floor(diff / 3600000)).padStart(2, '0'),
-      m: String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0'),
-      s: String(Math.floor((diff % 60000) / 1000)).padStart(2, '0'),
-    };
-  };
-  const [time, setTime] = useState(getTime());
-  useEffect(() => {
-    const id = setInterval(() => setTime(getTime()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return time;
-}
+/* ─── NEWSLETTER POPUP ──────────────────────── */
+const PromoPopup = () => {
+  const [show, setShow] = useState(false);
+  const [email, setEmail] = useState('');
 
-/* ─── FAQ Item ──────────────────────────────── */
-const FAQItem = ({ q, a, i }) => {
-  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const closed = sessionStorage.getItem('popup_closed');
+      if (!closed) setShow(true);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const closePopup = () => {
+    setShow(false);
+    sessionStorage.setItem('popup_closed', 'true');
+  };
+
   return (
-    <motion.div
-      className="accordion-item"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: i * 0.08 }}
-    >
-      <div className="accordion-header" onClick={() => setOpen(!open)}>
-        <span>{q}</span>
-        <ChevronDown
-          size={18}
-          className="accordion-icon"
-          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
-        />
-      </div>
-      {open && (
-        <motion.div
-          className="accordion-content"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.25 }}
-        >
-          {a}
-        </motion.div>
+    <AnimatePresence>
+      {show && (
+        <div className="popup-overlay">
+          <motion.div 
+            className="popup-content"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+          >
+            <button className="popup-close" onClick={closePopup}><X size={20} /></button>
+            <div className="popup-left">
+              <img src="https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=500&q=80" alt="promo" />
+            </div>
+            <div className="popup-right">
+              <h2>GET 20% OFF</h2>
+              <p>Join the inner circle and get exclusive first access to viral tech drops and seasonal flash sales.</p>
+              <div className="popup-form">
+                <div className="input-group">
+                  <Mail size={16} />
+                  <input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} />
+                </div>
+                <button className="btn-premium" onClick={closePopup}>Get Offer</button>
+              </div>
+              <span className="no-spam">* No spam ever. Unsubscribe anytime.</span>
+            </div>
+          </motion.div>
+        </div>
       )}
-    </motion.div>
+    </AnimatePresence>
   );
 };
 
-/* ─── Main Component ────────────────────────── */
-const Home = ({ onCartOpen }) => {
-  const { formatPrice, products, addToCart } = useShop();
-  const countdown = useCountdown();
-  const [wishlisted, setWishlisted] = useState({});
-  const [addedId, setAddedId] = useState(null);
+/* ─── PRODUCT SLIDER SECTION ────────────────── */
+const CategorySlider = ({ title, products, formatPrice, addToCart }) => {
+  const scrollRef = useRef(null);
 
-  const toggleWish = (id, e) => {
-    e.stopPropagation();
-    setWishlisted(prev => ({ ...prev, [id]: !prev[id] }));
+  const scroll = (dir) => {
+    const { current } = scrollRef;
+    if (current) {
+      const scrollAmount = 400;
+      current.scrollBy({ left: dir === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
   };
-
-  const handleAddToCart = (product, e) => {
-    e.stopPropagation();
-    addToCart(product);
-    setAddedId(product.id);
-    setTimeout(() => setAddedId(null), 1500);
-    if (onCartOpen) onCartOpen();
-  };
-
-  const categories = [
-    { icon: '⚡', name: 'Charging Tech', count: '12 Products' },
-    { icon: '🌿', name: 'Home Wellness', count: '8 Products' },
-    { icon: '🎧', name: 'Audio & Sound', count: '15 Products' },
-    { icon: '💡', name: 'Smart Lighting', count: '9 Products' },
-  ];
-
-  const reviews = [
-    {
-      name: 'David S.',
-      loc: 'New York, US',
-      text: 'The anti-gravity humidifier is MAGIC. Matches my dark setup perfectly. Super fast shipping too!',
-      rating: 5,
-    },
-    {
-      name: 'Layla H.',
-      loc: 'Dubai, UAE',
-      text: 'Excellent quality and packaging. The premium station fast charges all 3 devices simultaneously!',
-      rating: 5,
-    },
-    {
-      name: 'Omar F.',
-      loc: 'London, UK',
-      text: 'Incredible design. Customer support resolved my query in minutes. Highly recommend Lumina!',
-      rating: 5,
-    },
-  ];
-
-  const faqs = [
-    {
-      q: 'Do you ship internationally?',
-      a: 'Absolutely! We partner with premium global carriers to ship worldwide. Most orders arrive within 7–14 business days internationally, and 2–5 days within the USA.',
-    },
-    {
-      q: 'What is the return policy?',
-      a: 'We offer a fully protected 30-day return window. If you are not 100% satisfied for any reason, we issue a full refund — no questions asked.',
-    },
-    {
-      q: 'Are the electronics certified?',
-      a: 'Yes! All our power stations and electronics carry CE, FCC, and RoHS certifications for your complete safety and peace of mind.',
-    },
-    {
-      q: 'How do I track my order?',
-      a: 'Once your order ships, you receive a confirmation email with a tracking link. You can follow your parcel in real time until it reaches your door.',
-    },
-  ];
 
   return (
-    <div className="home-page">
+    <div className="category-section container">
+      <div className="category-header">
+        <h2>{title}</h2>
+        <div className="slider-btns">
+          <button onClick={() => scroll('left')}><ChevronLeft size={20} /></button>
+          <button onClick={() => scroll('right')}><ChevronRight size={20} /></button>
+        </div>
+      </div>
+      <div className="product-scroll-wrap" ref={scrollRef}>
+        {products.map((product) => (
+          <div key={product.id} className="product-card mini">
+            <div className="card-img-wrapper">
+              <Link to={`/product/${product.id}`}><img src={product.image} alt={product.name} /></Link>
+              {product.badge && <span className="product-badge">{product.badge}</span>}
+              <button className="quick-add-small" onClick={() => addToCart(product)}><ShoppingBag size={14} /></button>
+            </div>
+            <Link to={`/product/${product.id}`} className="card-info-mini">
+              <div className="mini-rating"><Star size={10} fill="#f59e0b" stroke="none" /> <span>4.9 (2k+)</span></div>
+              <h3 className="mini-title">{product.name}</h3>
+              <div className="mini-price-row">
+                <span className="mini-price">{formatPrice(product.price)}</span>
+                <span className="mini-old">{formatPrice(product.oldPrice)}</span>
+              </div>
+              <div className="viral-label">🔥 Viral Product</div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-      {/* ══════════════════════ HERO ══════════════════════ */}
-      <section className="hero-section">
-        <div className="hero-overlay" />
-        <div className="hero-overlay-accent" />
-        <img src={heroBg} alt="Lumina Tech" className="hero-bg-img" />
+/* ─── MAIN HOME COMPONENT ───────────────────── */
+const Home = () => {
+  const { formatPrice, products, addToCart } = useShop();
+  const [activeHero, setActiveHero] = useState(0);
 
-        <div className="container hero-content">
-          <motion.div
-            className="hero-badge"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
-          >
-            <span className="hero-badge-dot" />
-            New Collection 2026
-          </motion.div>
+  // Filter Categories
+  const cat_new = products.filter(p => p.category === 'New Arrivals');
+  const cat_best = products.filter(p => p.category === 'Best Sellers');
+  const cat_tech = products.filter(p => p.category === 'Trending Tech');
+  const cat_gadgets = products.filter(p => p.category === 'Chargers & Gadgets');
+  const cat_home = products.filter(p => p.category === 'Home Essentials');
+  
+  const heroSlides = products.filter(p => p.badge === 'Bestseller' || p.badge === 'Trending').slice(0, 3);
 
-          <motion.h1
-            className="hero-title"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.6 }}
-          >
-            Upgrade Your Desk.<br />Elevate Your Life.
-          </motion.h1>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveHero(prev => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
 
-          <motion.p
-            className="hero-sub"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            Premium tech accessories crafted for the modern creator. Minimal design, maximum impact.
-          </motion.p>
+  return (
+    <div className="home-wrapper">
+      <PromoPopup />
 
-          <motion.div
-            className="hero-cta"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55, duration: 0.5 }}
-          >
-            <button className="btn-premium">
-              Shop Now <ArrowRight size={16} />
-            </button>
-            <button className="btn-outline">View Bestsellers</button>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            className="hero-stats"
+      {/* ─── HERO AUTO SLIDER ─── */}
+      <section className="hero-slider">
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={activeHero}
+            className="hero-slide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            <div className="hero-stat">
-              <div className="hero-stat-num">10K+</div>
-              <div className="hero-stat-label">Happy Customers</div>
+            <div className="hero-bg-overlay">
+              <img src={heroSlides[activeHero]?.image} alt="hero" />
             </div>
-            <div className="hero-stat-divider" />
-            <div className="hero-stat">
-              <div className="hero-stat-num">50+</div>
-              <div className="hero-stat-label">Countries</div>
-            </div>
-            <div className="hero-stat-divider" />
-            <div className="hero-stat">
-              <div className="hero-stat-num">4.9★</div>
-              <div className="hero-stat-label">Avg Rating</div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ══════════════════════ TRUST BAR ══════════════════════ */}
-      <section className="trust-bar">
-        <div className="container trust-grid">
-          {[
-            { icon: <Truck size={20} />, title: 'Fast Global Shipping', desc: 'Expedited 2-Day handling in the USA.' },
-            { icon: <ShieldCheck size={20} />, title: 'Secure Encryption', desc: '256-bit SSL protection on all orders.' },
-            { icon: <RefreshCw size={20} />, title: '30-Day Returns', desc: 'No questions asked money back policy.' },
-            { icon: <Headphones size={20} />, title: '24/7 Support', desc: 'Real humans ready to help anytime.' },
-          ].map((t, i) => (
-            <motion.div
-              key={i}
-              className="trust-item"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <div className="trust-icon-wrap">{t.icon}</div>
-              <div className="trust-info">
-                <div className="trust-title">{t.title}</div>
-                <div className="trust-desc">{t.desc}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════ CATEGORIES ══════════════════════ */}
-      <section className="category-strip container">
-        <div className="section-header">
-          <span className="section-eyebrow"><Zap size={12} /> Shop by Category</span>
-          <h2>Find Your Perfect Tech</h2>
-          <p>Curated collections for every aspect of your modern lifestyle.</p>
-        </div>
-        <div className="category-grid">
-          {categories.map((cat, i) => (
-            <motion.div
-              key={i}
-              className="category-card"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -4 }}
-            >
-              <div className="cat-icon">{cat.icon}</div>
-              <div>
-                <div className="cat-name">{cat.name}</div>
-                <div className="cat-count">{cat.count}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════ PRODUCTS ══════════════════════ */}
-      <section className="featured-section container">
-        <div className="section-header">
-          <span className="section-eyebrow"><Award size={12} /> Featured Products</span>
-          <h2>Problem-Solving Innovations</h2>
-          <p>Highly curated, functional tech for the ultimate aesthetic setup.</p>
-        </div>
-
-        <div className="products-grid">
-          {products.map((product, idx) => (
-            <motion.div
-              key={product.id}
-              className="product-card"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.15, duration: 0.5 }}
-            >
-              <div className="card-img-wrapper">
-                <Link to={`/product/${product.id}`} style={{ display: 'block', height: '100%' }}>
-                  <img src={product.image} alt={product.name} />
-                </Link>
-                {product.tag && <span className="tag">{product.tag}</span>}
-                <button
-                  className="wishlist-btn"
-                  onClick={(e) => toggleWish(product.id, e)}
-                >
-                  <Heart
-                    size={15}
-                    fill={wishlisted[product.id] ? '#f43f5e' : 'none'}
-                    stroke={wishlisted[product.id] ? '#f43f5e' : 'currentColor'}
-                  />
-                </button>
-                <button
-                  className="quick-add"
-                  onClick={(e) => handleAddToCart(product, e)}
-                >
-                  <ShoppingBag size={14} />
-                  {addedId === product.id ? '✓ Added!' : 'Add to Cart'}
-                </button>
-              </div>
-
-              <Link to={`/product/${product.id}`} className="card-info" style={{ textDecoration: 'none' }}>
-                <span className="card-category">{product.category}</span>
-                <div className="card-name">{product.name}</div>
-                <div className="card-bottom">
-                  <div className="card-rating">
-                    {[...Array(5)].map((_, s) => (
-                      <Star key={s} size={11} fill={s < Math.floor(product.rating || 5) ? '#f59e0b' : '#333'} stroke="none" />
-                    ))}
-                    <span className="card-rating-num">({(product.reviews || 128).toLocaleString()})</span>
-                  </div>
-                  <div className="card-price">
-                    {formatPrice(product.price)}
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════ PROMO BANNER ══════════════════════ */}
-      <section className="promo-banner container">
-        <div className="promo-inner">
-          <div>
-            <div className="promo-eyebrow">⚡ Limited Time Offer</div>
-            <div className="promo-title">Flash Sale — Up to 40% Off<br />Selected Items</div>
-            <div className="promo-desc">
-              Don't miss these exclusive deals. Offer ends at midnight — grab yours before it's gone.
-            </div>
-            <div className="countdown-wrap">
-              {[
-                { num: countdown.h, label: 'Hours' },
-                { num: countdown.m, label: 'Mins' },
-                { num: countdown.s, label: 'Secs' },
-              ].map((b, i) => (
-                <div key={i} className="countdown-block">
-                  <span className="countdown-num">{b.num}</span>
-                  <span className="countdown-label">{b.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="promo-actions">
-            <button className="btn-premium">
-              Shop Sale <ArrowRight size={16} />
-            </button>
-            <button className="btn-ghost">View All Deals</button>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════ REVIEWS ══════════════════════ */}
-      <section className="reviews-section">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-eyebrow"><Star size={12} /> Customer Reviews</span>
-            <h2>Loved by Creators Globally</h2>
-            <p>Join over 10,000+ setups upgraded with Lumina Tech.</p>
-          </div>
-
-          <div className="review-grid">
-            {reviews.map((rev, i) => (
-              <motion.div
-                key={i}
-                className="review-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
-                whileHover={{ y: -5 }}
+            <div className="container hero-content-v2">
+              <motion.span 
+                initial={{ y: 20, opacity: 0 }} 
+                animate={{ y: 0, opacity: 1 }} 
+                className="hero-eyebrow"
               >
-                <div className="stars">
-                  {[...Array(rev.rating)].map((_, s) => (
-                    <Star key={s} size={14} fill="#f59e0b" stroke="none" />
-                  ))}
-                </div>
-                <p className="review-text">{rev.text}</p>
-                <div className="reviewer">
-                  <div className="rev-avatar">{rev.name[0]}</div>
-                  <div>
-                    <div className="rev-name">{rev.name}</div>
-                    <div className="rev-loc">{rev.loc}</div>
-                  </div>
-                  <CircleCheck size={16} style={{ marginLeft: 'auto', color: 'var(--accent-secondary)' }} />
-                </div>
+                <Zap size={14} /> Featured Innovation
+              </motion.span>
+              <motion.h1 
+                initial={{ y: 20, opacity: 0 }} 
+                animate={{ y: 0, opacity: 1 }} 
+                transition={{ delay: 0.2 }}
+              >
+                {heroSlides[activeHero]?.name}
+              </motion.h1>
+              <motion.p 
+                initial={{ y: 20, opacity: 0 }} 
+                animate={{ y: 0, opacity: 1 }} 
+                transition={{ delay: 0.3 }}
+              >
+                Experience the next generation of lifestyle technology. 
+                Designed in the USA for the modern aesthetic.
+              </motion.p>
+              <motion.div 
+                className="hero-btns"
+                initial={{ y: 20, opacity: 0 }} 
+                animate={{ y: 0, opacity: 1 }} 
+                transition={{ delay: 0.4 }}
+              >
+                <Link to={`/product/${heroSlides[activeHero]?.id}`} className="btn-premium">
+                   Shop Now <ArrowRight size={16} />
+                </Link>
+                <button className="btn-outline-white">View Gallery</button>
               </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════ FAQ ══════════════════════ */}
-      <section className="container">
-        <div className="section-header">
-          <span className="section-eyebrow"><Package size={12} /> FAQs</span>
-          <h2>Got Questions?</h2>
-          <p>Everything you need to know before you buy.</p>
-        </div>
-        <div className="faq-section">
-          {faqs.map((faq, i) => (
-            <FAQItem key={i} q={faq.q} a={faq.a} i={i} />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+        
+        {/* Hero Indicators */}
+        <div className="hero-indicators">
+          {heroSlides.map((_, i) => (
+            <div key={i} className={`indicator ${activeHero === i ? 'active' : ''}`} onClick={() => setActiveHero(i)} />
           ))}
         </div>
       </section>
 
-      {/* ══════════════════════ NEWSLETTER ══════════════════════ */}
-      <section className="container">
-        <div className="newsletter-wrap">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <p className="section-eyebrow" style={{ justifyContent: 'center' }}>
-              <Globe size={12} /> Exclusive Access
-            </p>
-            <h2 className="newsletter-title">Unlock 10% Off Your First Order</h2>
-            <p className="newsletter-sub">
-              Join the circle. Get exclusive tech drops, flash sales, and first access to new arrivals.
-            </p>
-            <form className="news-form" onSubmit={(e) => e.preventDefault()}>
-              <input type="email" placeholder="Enter your email address..." required />
-              <button type="submit" className="btn-premium">
-                Subscribe <ArrowRight size={15} />
-              </button>
-            </form>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text-faint)', marginTop: '1rem', position: 'relative', zIndex: 1 }}>
-              No spam ever. Unsubscribe anytime. 🔒
-            </p>
-          </motion.div>
+      {/* ─── TRUST BAR ─── */}
+      <section className="trust-ribbon">
+        <div className="container trust-flex">
+          <div><Truck size={18}/> <span>Free Worldwide Shipping</span></div>
+          <div className="divider-v"/>
+          <div><ShieldCheck size={18}/> <span>Secure Checkout</span></div>
+          <div className="divider-v"/>
+          <div><RefreshCw size={18}/> <span>30-Day Money Back</span></div>
+          <div className="divider-v"/>
+          <div><Award size={18}/> <span>Premium Quality</span></div>
         </div>
       </section>
 
+      {/* ─── CATEGORY SLIDERS ─── */}
+      <CategorySlider title="New Arrivals" products={cat_new} formatPrice={formatPrice} addToCart={addToCart} />
+      <CategorySlider title="Best Sellers" products={cat_best} formatPrice={formatPrice} addToCart={addToCart} />
+      <CategorySlider title="Trending Tech" products={cat_tech} formatPrice={formatPrice} addToCart={addToCart} />
+      <CategorySlider title="Chargers & Gadgets" products={cat_gadgets} formatPrice={formatPrice} addToCart={addToCart} />
+      <CategorySlider title="Home Essentials" products={cat_home} formatPrice={formatPrice} addToCart={addToCart} />
+
+      {/* ─── TESTIMONIALS ─── */}
+      <section className="pdp-trust-bar">
+        <div className="container" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h2>Trusted by 10,000+ Happy Customers</h2>
+          <p style={{ color: '#666' }}>Don't just take our word for it. Here's what they say.</p>
+        </div>
+        <div className="container testimonials-grid">
+           {[1, 2, 3, 4].map(i => (
+             <div key={i} className="test-card">
+               <div className="test-stars"><Star size={14} fill="#f59e0b" stroke="none" /> x5</div>
+               <p>"Best purchase I've made this year. High quality materials and fast shipping to New York!"</p>
+               <div className="test-author">
+                 <div className="test-avatar">{(i === 1 ? 'JD' : i === 2 ? 'SM' : i === 3 ? 'MR' : 'EW')}</div>
+                 <div>
+                   <div className="test-name">{i === 1 ? 'John D.' : i === 2 ? 'Sarah M.' : i === 3 ? 'Michael R.' : 'Emma W.'}</div>
+                   <div className="test-loc">Verified Buyer, USA</div>
+                 </div>
+               </div>
+             </div>
+           ))}
+        </div>
+      </section>
     </div>
   );
 };

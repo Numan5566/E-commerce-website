@@ -1,119 +1,162 @@
-import chargerImg from '../assets/images/charger.png';
-import diffuserImg from '../assets/images/diffuser.png';
-import watchImg from '../assets/images/watch.png';
-import sneakersImg from '../assets/images/sneakers.png';
-
 /**
- * 🏆 WINNING DROPSHIPPING PRODUCTS 2025
- * 
- * Product 1 — MagSafe 3-in-1 PowerStation
- * AliExpress Source: https://www.aliexpress.com/item/1005005889742946.html
- * Sell Price: $59.99 | Buy Price: ~$12-18 | Margin: ~70%
- * 
- * Product 2 — Anti-Gravity Aura Humidifier
- * AliExpress Source: https://www.aliexpress.com/item/1005004786785027.html
- * Sell Price: $74.99 | Buy Price: ~$15-22 | Margin: ~72%
- * 
- * Product 3 — Smart LED Desk Lamp (Wireless Charging)
- * AliExpress Source: https://www.aliexpress.com/item/1005006023479181.html
- * Sell Price: $49.99 | Buy Price: ~$10-14 | Margin: ~75%
- * 
- * Product 4 — Magnetic Floating Moon Lamp
- * AliExpress Source: https://www.aliexpress.com/item/4001224440491.html
- * Sell Price: $89.99 | Buy Price: ~$20-28 | Margin: ~68%
- * 
- * Product 5 — Premium Smart Watch Ultra
- * AliExpress Source: https://www.aliexpress.com/item/1005005937695009.html
- * Sell Price: $79.99 | Buy Price: ~$16-22 | Margin: ~73%
- * 
- * Product 6 — Galaxy Leather Sneakers
- * AliExpress Source: https://www.aliexpress.com/item/1005005623847261.html
- * Sell Price: $64.99 | Buy Price: ~$14-20 | Margin: ~70%
+ * 🏆 EXPANDED USA-STYLE DROPSHIPPING PRODUCT DATABASE
+ * Categories: New Arrivals, Best Sellers, Trending Tech, Chargers & Gadgets, Home Essentials, Viral Products
  */
 
 export const featuredProducts = [
+  // ─── TRENDING TECH ───
   {
     id: 1,
-    name: "MagSafe 3-in-1 PowerStation",
-    category: "Charging Tech",
+    name: "MagSafe 3-in-1 PowerStation Pro",
+    category: "Trending Tech",
     price: 59.99,
-    image: chargerImg,
-    tag: "🔥 Viral Best Seller",
+    oldPrice: 99.99,
+    discount: "40%",
+    image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Bestseller",
     rating: 4.9,
     reviews: 2847,
     stock: 48,
-    supplier: "https://www.aliexpress.com/item/1005005889742946.html",
-    buyPrice: 15.00,
-    description: "Fast-charge iPhone, AirPods & Apple Watch simultaneously. MagSafe compatible with 15W wireless charging.",
+    description: "The ultimate charging hub for your Apple ecosystem. Fast-charge iPhone, Watch, and AirPods simultaneously.",
+    specs: ["15W MagSafe Fast Charge", "Qi-Compatible", "Premium Zinc Alloy", "Overheat Protection"],
+    warranty: "Lifetime Warranty",
+    video: "https://v.lemonlight.com/640x360.mp4"
   },
   {
     id: 2,
     name: "Anti-Gravity Aura Humidifier",
-    category: "Home Wellness",
+    category: "Trending Tech",
     price: 74.99,
-    image: diffuserImg,
-    tag: "⚡ Trending Now",
+    oldPrice: 124.99,
+    discount: "40%",
+    image: "https://images.unsplash.com/photo-1585611183913-9154a438848d?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Trending",
     rating: 4.8,
     reviews: 1934,
     stock: 31,
-    supplier: "https://www.aliexpress.com/item/1005004786785027.html",
-    buyPrice: 18.00,
-    description: "Levitating mist technology creates a floating cloud effect. Perfect for desk aesthetics and air quality.",
+    description: "Levitating water drops that defy gravity while purifying your air. Perfect for high-end desk setups.",
+    specs: ["Ultrasonic Mist", "LED Clock Display", "Auto Shut-off", "USB-C Powered"]
   },
+
+  // ─── CHARGERS & GADGETS ───
   {
     id: 3,
-    name: "Smart LED Desk Lamp Pro",
-    category: "Smart Lighting",
-    price: 49.99,
-    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&q=80",
-    tag: "💡 Top Pick",
+    name: "65W GaN Crystal Charger",
+    category: "Chargers & Gadgets",
+    price: 39.99,
+    oldPrice: 69.99,
+    discount: "42%",
+    image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Hot Choice",
     rating: 4.7,
-    reviews: 1421,
-    stock: 65,
-    supplier: "https://www.aliexpress.com/item/1005006023479181.html",
-    buyPrice: 11.00,
-    description: "10 brightness levels, touch control, USB-C charging port built in. Foldable arm for any desk position.",
+    reviews: 856,
+    stock: 120,
+    description: "The world's smallest 65W GaN charger with a transparent futuristic design."
   },
   {
     id: 4,
-    name: "Magnetic Floating Moon Lamp",
-    category: "Smart Lighting",
-    price: 89.99,
-    image: "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=600&q=80",
-    tag: "🌕 Wow Factor",
+    name: "Invisible Desktop Wireless Charger",
+    category: "Chargers & Gadgets",
+    price: 45.99,
+    oldPrice: 79.99,
+    discount: "43%",
+    image: "https://images.unsplash.com/photo-1610940882244-116086f6f9fc?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Innovative",
     rating: 4.9,
-    reviews: 3201,
-    stock: 22,
-    supplier: "https://www.aliexpress.com/item/4001224440491.html",
-    buyPrice: 24.00,
-    description: "Gravity-defying magnetic levitation moon. 3D printed lunar surface, wireless charging base. Ultimate gift.",
+    reviews: 1102,
+    stock: 55,
+    description: "Turns any desk into a wireless charger. Mounts under the table and charges through wood/glass."
   },
+
+  // ─── NEW ARRIVALS ───
   {
     id: 5,
-    name: "Ultra Smart Watch Series X",
-    category: "Wearable Tech",
-    price: 79.99,
-    image: watchImg,
-    tag: "⌚ New Arrival",
+    name: "Ultra Slim RGB Mechanical Keyboard",
+    category: "New Arrivals",
+    price: 89.99,
+    oldPrice: 149.99,
+    discount: "40%",
+    image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&q=80",
+    tag: "Viral Product",
+    badge: "New",
     rating: 4.8,
-    reviews: 2156,
-    stock: 44,
-    supplier: "https://www.aliexpress.com/item/1005005937695009.html",
-    buyPrice: 19.00,
-    description: "1.96\" AMOLED display, blood oxygen, heart rate, GPS tracking. 7-day battery. iOS & Android compatible.",
+    reviews: 420,
+    stock: 25,
+    description: "Anodized aluminum body with low-profile mechanical switches. The peak of desk aesthetics."
   },
   {
     id: 6,
-    name: "Premium Lifestyle Sneakers",
-    category: "Fashion",
-    price: 64.99,
-    image: sneakersImg,
-    tag: "👟 Limited Drop",
+    name: "Minimalist Leather Desk Mat Pro",
+    category: "New Arrivals",
+    price: 34.99,
+    oldPrice: 59.99,
+    discount: "41%",
+    image: "https://images.unsplash.com/photo-1541140532154-b024d715b909?w=800&q=80",
+    tag: "Viral Product",
+    badge: "New",
     rating: 4.7,
-    reviews: 987,
-    stock: 18,
-    supplier: "https://www.aliexpress.com/item/1005005623847261.html",
-    buyPrice: 17.00,
-    description: "Breathable mesh upper, cushioned sole, unisex sizing. Street-style design for everyday wear.",
+    reviews: 630,
+    stock: 80,
+    description: "Premium vegan leather mat that protects your desk and improves mouse precision."
   },
+
+  // ─── BEST SELLERS ───
+  {
+    id: 7,
+    name: "Orbit Floating Globe Lamp",
+    category: "Best Sellers",
+    price: 99.99,
+    oldPrice: 169.99,
+    discount: "41%",
+    image: "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Best Seller",
+    rating: 4.9,
+    reviews: 3500,
+    stock: 12,
+    description: "Magnetic levitation globe that rotates in mid-air. The ultimate conversation piece."
+  },
+
+  // ─── HOME ESSENTIALS ───
+  {
+    id: 8,
+    name: "Smart Motion Sensor LED Strip",
+    category: "Home Essentials",
+    price: 24.99,
+    oldPrice: 44.99,
+    discount: "45%",
+    image: "https://images.unsplash.com/photo-1550985543-f47f38aee65e?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Useful",
+    rating: 4.8,
+    reviews: 2100,
+    stock: 200,
+    description: "Automatically lights up your stairs or closet when you walk by. Tool-free installation."
+  },
+  {
+    id: 9,
+    name: "Aesthetic Flame Diffuser",
+    category: "Home Essentials",
+    price: 49.99,
+    oldPrice: 89.99,
+    discount: "44%",
+    image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=800&q=80",
+    tag: "Viral Product",
+    badge: "Viral",
+    rating: 4.8,
+    reviews: 4300,
+    stock: 90,
+    description: "Ultrasonic aromatherapy with a unique flame effect. 7-color ambient lighting."
+  }
+];
+
+export const reviews = [
+  { id: 1, name: "John D.", location: "New York, USA", rating: 5, comment: "Absolutely stunning product! The quality exceeded my expectations. Shipping was incredibly fast.", date: "2 days ago" },
+  { id: 2, name: "Sarah M.", location: "California, USA", rating: 5, comment: "Perfect for my home office setup. I've bought 3 items from Lumina and all are top notch.", date: "1 week ago" },
+  { id: 3, name: "Michael R.", location: "Texas, USA", rating: 5, comment: "The anti-gravity humidifier is magic! My friends always ask about it. 10/10 recommend.", date: "3 days ago" },
+  { id: 4, name: "Emma W.", location: "Florida, USA", rating: 4, comment: "Great gadgets, very modern design. Customer support was very helpful with my tracking.", date: "5 days ago" }
 ];
