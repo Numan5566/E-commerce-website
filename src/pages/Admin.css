@@ -1175,43 +1175,10 @@
   margin-top: 0.4rem;
 }
 
-.admin-login-form {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.admin-login-form .form-group {
-  text-align: left;
-}
-
-.admin-login-form label {
-  display: block;
-  color: rgba(224, 224, 240, 0.7);
-  font-size: 0.82rem;
-  font-weight: 500;
-  margin-bottom: 0.7rem;
-  margin-left: 0.3rem;
-}
-
-.admin-login-form input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem 1.25rem;
-  border-radius: 14px;
-  color: #fff;
-  font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  outline: none;
-}
-
-.admin-login-form input:focus {
-  border-color: #7c6af7;
-  background: rgba(124, 106, 247, 0.04);
-  box-shadow: 0 0 0 4px rgba(124, 106, 247, 0.12);
-  transform: translateY(-1px);
+.admin-login-form .sp-input {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
 }
 
 .login-hint {

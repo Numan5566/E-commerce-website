@@ -625,11 +625,19 @@ const AdminDashboard = () => {
           <p>Admin Control Panel</p>
         </div>
         <form onSubmit={handleLogin} className="admin-login-form">
-          <div className="form-group">
-            <label>Password</label>
-            <input type="password" value={passInput} onChange={e => setPassInput(e.target.value)} placeholder="Enter admin password..." autoFocus />
+          <div className="sp-form-group">
+            <label style={{display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem'}}>Password</label>
+            <input 
+              type="password" 
+              value={passInput} 
+              onChange={e => setPassInput(e.target.value)} 
+              placeholder="Enter admin password..." 
+              autoFocus 
+              className="sp-input"
+              style={{ width: '100%', padding: '12px 16px', fontSize: '1rem' }}
+            />
           </div>
-          <button type="submit" className="btn-save" style={{ width: '100%', justifyContent: 'center', padding: '0.85rem' }}>
+          <button type="submit" className="btn-save" style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginTop: '1rem' }}>
             <Lock size={16} /> Access Panel
           </button>
         </form>
