@@ -12,7 +12,8 @@ export const regions = [
 ];
 
 export const ShopProvider = ({ children }) => {
-  const [region, setRegion] = useState(regions[0]);
+  const [region, setRegion] = useState(regions.find(r => r.code === 'AE') || regions[0]);
+
   
   // Cart: array of { ...product, qty }
   const [cart, setCart] = useState(() => {

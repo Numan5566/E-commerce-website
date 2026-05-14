@@ -11,107 +11,98 @@ const announcements = [
   "NEW SEASON DROP: EXPLORE THE FUTURE OF LIVING",
   "JOIN OUR COMMUNITY FOR 20% OFF YOUR FIRST ORDER"
 ];
-
-const Navbar = ({ onCartOpen }) => {
-  const { region, setRegion, cartCount } = useShop();
+const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
-  const [announcementIdx, setAnnouncementIdx] = useState(0);
-  const [mobileMenu, setMobileMenu] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isRegionOpen, setIsRegionOpen] = useState(false);
+  const { cartCount, region, setRegion, regions } = useShop();
+  const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-    
-    const interval = setInterval(() => {
-      setAnnouncementIdx(prev => (prev + 1) % announcements.length);
-    }, 5000);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearInterval(interval);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => setMobileMenuOpen(false), [location]);
 
   return (
     <>
+      {/* ─── TOP ANNOUNCEMENT ─── */}
       <div className="announcement-bar-v3">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={announcementIdx}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5 }}
-            className="ann-text"
-          >
-            {announcements[announcementIdx]}
-          </motion.div>
-        </AnimatePresence>
+        FREE NEXT-DAY DELIVERY ACROSS UAE — DUBAI | ABU DHABI | SHARJAH
       </div>
 
-      <header className={`navbar-v3 ${isScrolled ? 'scrolled' : ''}`}>
+      <nav className={`navbar-v3 ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container nav-inner-v3">
-          {/* Logo */}
+          
+          {/* LOGO */}
           <Link to="/" className="nav-logo-v3">
-            <img src={logoImg} alt="Lumina" />
-            <span>LUMINA</span>
+            <span>LUMINA UAE</span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="nav-menu-v3">
-            <Link to="/shop" className="nav-item-v3">Shop All</Link>
+          {/* DESKTOP MENU */}
+          <div className="nav-menu-v3">
+            <Link to="/shop" className="nav-item-v3">Collection</Link>
             <Link to="/shop" className="nav-item-v3">New Arrivals</Link>
             <Link to="/shop" className="nav-item-v3">Best Sellers</Link>
-            <Link to="/track-order" className="nav-item-v3">Track</Link>
-          </nav>
+            <Link to="/shop" className="nav-item-v3">Support</Link>
+          </div>
 
-          {/* Actions */}
+          {/* ACTIONS */}
           <div className="nav-actions-v3">
-            <button className="nav-action-btn-v3 globe-wrap" onMouseEnter={() => setLangOpen(true)} onMouseLeave={() => setLangOpen(false)}>
-              <Globe size={18} />
-              <span className="region-code">{region.code}</span>
+            <div className="globe-wrap" onMouseEnter={() => setIsRegionOpen(true)} onMouseLeave={() => setIsRegionOpen(false)}>
+              <button className="nav-action-btn-v3">
+                <Globe size={18} />
+                <span className="region-code">{region.code}</span>
+              </button>
+              
               <AnimatePresence>
-                {langOpen && (
+                {isRegionOpen && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="region-dropdown-v3">
                     {regions.map(r => (
-                      <div key={r.code} className="region-opt" onClick={() => setRegion(r)}>
+                      <div key={r.code} className={`region-opt ${region.code === r.code ? 'active' : ''}`} onClick={() => setRegion(r)}>
                         {r.name} <span>{r.currency}</span>
                       </div>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
-            </button>
+            </div>
+
             <button className="nav-action-btn-v3"><Search size={18} /></button>
-            <button className="nav-action-btn-v3 cart-trigger-v3" onClick={onCartOpen}>
+            <Link to="/admin" className="nav-action-btn-v3"><User size={18} /></Link>
+            
+            <Link to="/cart" className="nav-action-btn-v3">
               <ShoppingBag size={18} />
               {cartCount > 0 && <span className="cart-dot-v3">{cartCount}</span>}
-            </button>
-            <button className="nav-action-btn-v3 mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)}>
-              {mobileMenu ? <X size={20} /> : <Menu size={20} />}
+            </Link>
+
+            <button className="mobile-toggle nav-action-btn-v3" onClick={() => setMobileMenuOpen(true)}>
+              <Menu size={22} />
             </button>
           </div>
         </div>
-      </header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenu && (
-          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="mobile-overlay-v3">
-             <nav className="mobile-nav-links">
-                <Link to="/shop" onClick={() => setMobileMenu(false)}>Shop All</Link>
-                <Link to="/shop" onClick={() => setMobileMenu(false)}>New Arrivals</Link>
-                <Link to="/shop" onClick={() => setMobileMenu(false)}>Best Sellers</Link>
-                <Link to="/track-order" onClick={() => setMobileMenu(false)}>Track Order</Link>
-                <Link to="/faq" onClick={() => setMobileMenu(false)}>FAQ</Link>
-             </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* MOBILE OVERLAY */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25 }} className="mobile-overlay-v3">
+              <button className="close-btn-v3" onClick={() => setMobileMenuOpen(false)}><X size={32} /></button>
+              <div className="mobile-nav-links">
+                <Link to="/shop">COLLECTION</Link>
+                <Link to="/shop">NEW ARRIVALS</Link>
+                <Link to="/shop">BEST SELLERS</Link>
+                <Link to="/shop">OUR STORY</Link>
+                <Link to="/admin">ADMIN PORTAL</Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
     </>
   );
 };
 
 export default Navbar;
-

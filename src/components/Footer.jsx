@@ -1,64 +1,69 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, MapPin, Phone, Instagram, Twitter, Youtube, ShieldCheck, Globe } from 'lucide-react';
-import logoImg from '../assets/logo.png';
+import { 
+  Instagram, Twitter, Facebook, 
+  MapPin, Phone, Mail, 
+  ShieldCheck, Globe, CreditCard
+} from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
   return (
     <footer className="footer-v3">
-      <div className="container footer-v3-inner">
+      <div className="container">
         <div className="footer-v3-main">
-          {/* Brand Info */}
+          {/* Brand Col */}
           <div className="footer-v3-brand">
             <Link to="/" className="footer-logo-v3">
-              <img src={logoImg} alt="Lumina" />
-              <span>LUMINA</span>
+              <span>LUMINA UAE</span>
             </Link>
             <p className="footer-desc">
-              Premium essentials for the modern lifestyle. Designed in San Francisco, delivered worldwide. Join 50,000+ pioneers living the future.
+              UAE's premier destination for minimalist tech and lifestyle accessories. Redefining premium craftsmanship for the modern Emirati visionary.
             </p>
             <div className="footer-socials-v3">
               <a href="#"><Instagram size={18} /></a>
               <a href="#"><Twitter size={18} /></a>
-              <a href="#"><Youtube size={18} /></a>
+              <a href="#"><Facebook size={18} /></a>
             </div>
           </div>
 
-          {/* Nav Links */}
+          {/* Links Grid */}
           <div className="footer-v3-links">
             <div className="footer-col-v3">
               <h5>COLLECTIONS</h5>
               <Link to="/shop">New Arrivals</Link>
               <Link to="/shop">Best Sellers</Link>
-              <Link to="/shop">Viral Tech</Link>
-              <Link to="/shop">Home Decor</Link>
+              <Link to="/shop">Signature Series</Link>
+              <Link to="/shop">Limited Drops</Link>
             </div>
             <div className="footer-col-v3">
               <h5>SUPPORT</h5>
-              <Link to="/track-order">Track Order</Link>
-              <Link to="/faq">Help Center</Link>
-              <Link to="/contact">Contact Us</Link>
-              <Link to="/policy">Return Policy</Link>
+              <Link to="/shop">Contact Us</Link>
+              <Link to="/shop">Shipping Policy</Link>
+              <Link to="/shop">Refund Policy</Link>
+              <Link to="/shop">Track Order</Link>
             </div>
             <div className="footer-col-v3">
-              <h5>LEGAL</h5>
-              <Link to="/policy">Privacy Policy</Link>
-              <Link to="/policy">Terms of Service</Link>
-              <Link to="/policy">Cookie Policy</Link>
-              <Link to="/admin">Admin Access</Link>
+              <h5>VISIT US</h5>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                <MapPin size={14} style={{ marginRight: '8px' }} /> 
+                Dubai Silicon Oasis, <br/>Building D, Office 402, <br/>Dubai, UAE
+              </p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                <Phone size={14} style={{ marginRight: '8px' }} /> +971 4 123 4567
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="footer-v3-bottom">
-          <div className="footer-copyright">
-            © 2026 LUMINA MINIMAL. ALL RIGHTS RESERVED.
-          </div>
+          <p className="footer-copyright">
+            © 2024 LUMINA UAE LUXURY RETAIL. ALL RIGHTS RESERVED.
+          </p>
           <div className="footer-trust-v3">
-            <span><ShieldCheck size={14} /> 256-BIT SSL ENCRYPTION</span>
-            <span><Globe size={14} /> FREE USA SHIPPING OVER $50</span>
+             <span><ShieldCheck size={14} /> SECURE CHECKOUT</span>
+             <span><Globe size={14} /> UAE EXPRESS SHIPPING</span>
+             <span><CreditCard size={14} /> CASH ON DELIVERY</span>
           </div>
         </div>
       </div>
@@ -67,4 +72,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
