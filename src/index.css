@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Montserrat:wght@300;400;600;800&display=swap');
 
 :root {
-  --bg-main: #FFFFFF;
+  --brand-green: #58b96b;
+  --bg-cream: #FDF9F3; /* Luxury Beige from Screenshot */
   --text-primary: #000000;
   --text-secondary: #555555;
-  --brand-green: #58b96b;
   --border-light: #EEEEEE;
   --font-heading: 'Montserrat', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-ar: 'Noto Sans Arabic', sans-serif;
 }
 
 * {
@@ -17,8 +18,9 @@
 }
 
 body {
-  background-color: var(--bg-main);
-  color: var(--text-primary);
+  background: var(--bg-cream);
+  color: #1a1a1a;
+  overflow-x: hidden;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
@@ -245,9 +247,37 @@ h1, h2, h3, h4 {
   transform: scale(1.1);
 }
 
-.category-icon-item span {
-  display: block;
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 1px;
+/* ─── GIFT SECTION ─── */
+.gift-banner {
+  height: 450px;
+  background: linear-gradient(to right, #E8D8C3, #FDF9F3);
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.gift-banner img {
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  height: 90%;
+  object-fit: contain;
+}
+
+/* ─── PRESS LOGOS ─── */
+.press-marquee {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 40px 0;
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
+.press-marquee img {
+  height: 35px;
+  width: auto;
 }
