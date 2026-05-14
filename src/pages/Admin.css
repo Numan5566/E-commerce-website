@@ -167,7 +167,6 @@
 
 .page-sub {
   font-size: 0.82rem;
-  color: #5555777;
   color: rgba(170,170,200,0.6);
 }
 
@@ -1383,3 +1382,161 @@
   color: #94a3b8;
   border: 1px solid rgba(148,163,184,0.2);
 }
+
+/* =============================================
+   DEVELOPER SETTINGS & DASHBOARD
+============================================= */
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.dev-card {
+  margin-bottom: 1.5rem !important;
+  background: #0d0e10 !important;
+  border-color: rgba(255,255,255,0.04) !important;
+}
+
+.sp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.docs-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #7c6af7;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.docs-link:hover { text-decoration: underline; }
+
+.dev-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dev-field label {
+  font-size: 0.75rem;
+  color: rgba(170,170,200,0.5);
+  font-weight: 500;
+}
+
+.dev-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dev-input-group input {
+  flex: 1;
+  background: #121314;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  color: #e0e0f0;
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.dev-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: #121314;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(170,170,200,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dev-icon-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  border-color: rgba(255,255,255,0.15);
+}
+
+.dev-btn-danger {
+  background: rgba(244,63,94,0.1);
+  color: #f43f5e;
+  border: 1px solid rgba(244,63,94,0.2);
+  padding: 0 1rem;
+  height: 36px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dev-btn-danger:hover { background: #f43f5e; color: #fff; }
+
+.dev-hint {
+  font-size: 0.75rem;
+  color: rgba(170,170,200,0.4);
+  margin-top: 0.4rem;
+}
+
+.dev-desc {
+  font-size: 0.85rem;
+  color: rgba(170,170,200,0.6);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.dev-upload-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.dev-upload-box {
+  width: 50px;
+  height: 50px;
+  background: #121314;
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(170,170,200,0.4);
+}
+
+.dev-upload-info {
+  font-size: 0.8rem;
+  color: rgba(170,170,200,0.5);
+  max-width: 300px;
+}
+
+.copied-text {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #48bb78;
+  white-space: nowrap;
+}
+
+.sp-badge {
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sp-badge.active {
+  background: rgba(72,187,120,0.1);
+  color: #48bb78;
+}
+
