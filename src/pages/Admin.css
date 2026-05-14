@@ -787,6 +787,10 @@
   border-color: #7c6af7;
   box-shadow: 0 0 0 2px rgba(124,106,247,0.2);
 }
+.sp-input option {
+  background: #111120;
+  color: #e0e0f0;
+}
 .sp-input.disabled { background: rgba(255,255,255,0.02); color: #48bb78; }
 
 .sp-rte {
