@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   Plus, LayoutDashboard, ShoppingCart, 
   Package, Users, Settings, LogOut,
-  TrendingUp, MapPin, DollarSign, 
+  TrendingUp, MapPin, 
   Search, Filter, MoreVertical,
+
   CheckCircle, Clock, AlertCircle,
   BarChart3, Globe
 } from 'lucide-react';

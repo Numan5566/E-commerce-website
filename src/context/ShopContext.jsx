@@ -17,9 +17,15 @@ export const ShopProvider = ({ children }) => {
   
   // Cart: array of { ...product, qty }
   const [cart, setCart] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('lumina_cart')) || []; } 
+    try { 
+      const saved = localStorage.getItem('lumina_cart');
+      const parsed = JSON.parse(saved) || [];
+      // Data migration: ensure all items use 'qty'
+      return parsed.map(item => ({ ...item, qty: item.qty || item.quantity || 1 }));
+    } 
     catch { return []; }
   });
+
 
   const [products, setProducts] = useState(() => {
     try {

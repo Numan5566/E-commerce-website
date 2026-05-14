@@ -4,9 +4,9 @@ import { useShop } from '../context/ShopContext';
 import { CheckCircle } from 'lucide-react';
 import './SalesPopup.css';
 
-const locations = ["Texas, USA", "California, USA", "New York, USA", "Florida, USA", "London, UK", "Sydney, AUS"];
-const names = ["Sarah M.", "Michael T.", "Jessica R.", "David K.", "Emily W.", "James L."];
-const times = ["2 minutes ago", "5 minutes ago", "12 minutes ago", "Just now", "1 hour ago"];
+const locations = ["Dubai, UAE", "Abu Dhabi, UAE", "Sharjah, UAE", "Ajman, UAE", "Dubai Marina", "Downtown Dubai", "Al Reem Island"];
+const names = ["Ahmed A.", "Sarah R.", "Omar J.", "Fatima H.", "Zayed M.", "Laila S."];
+const times = ["2 minutes ago", "5 minutes ago", "Just now", "12 minutes ago", "1 hour ago"];
 
 const SalesPopup = () => {
   const { products } = useShop();
@@ -32,15 +32,15 @@ const SalesPopup = () => {
       setTimeout(() => setPopupData(null), 5000);
     };
 
-    // Initial delay before first popup
+    // Initial delay
     const initialTimer = setTimeout(showRandomPopup, 8000);
 
-    // Show popup every 20-30 seconds
+    // Interval
     const interval = setInterval(() => {
-      if (!popupData) { // Only trigger if not currently showing
+      if (!popupData) {
         showRandomPopup();
       }
-    }, Math.floor(Math.random() * 10000) + 20000); 
+    }, 25000); 
 
     return () => {
       clearTimeout(initialTimer);
@@ -53,10 +53,9 @@ const SalesPopup = () => {
       {popupData && (
         <motion.div
           className="sales-popup"
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.9 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
         >
           <div className="sales-img">
             <img src={popupData.product.image} alt="product" />
