@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,6 +18,24 @@ const ProductDetails = () => {
   const [activeFeature, setActiveFeature] = useState(0);
   const [liveViewers, setLiveViewers] = useState(14);
   const [timeLeft, setTimeLeft] = useState({ h: 2, m: 45, s: 12 });
+  const scrollRef = useRef(null);
+
+  const generateReviews = (productName) => {
+    const names = ["Alex J.", "Sarah M.", "Michael T.", "Jessica R.", "David K.", "Emily W.", "James L.", "Olivia P.", "Daniel B.", "Sophia C."];
+    const titles = ["Amazing Product!", "Highly Recommend", "Best Purchase", "Excellent Quality", "Exceeded Expectations", "Great Value", "Love it!", "Perfect", "5 Stars", "Exactly as described"];
+    return names.map((name, i) => ({
+      id: i,
+      name,
+      rating: 5,
+      date: `${Math.floor(Math.random() * 10) + 1} days ago`,
+      title: titles[i],
+      text: `I recently bought the ${productName} and I am absolutely blown away by the quality. It works perfectly and the shipping was really fast. Will definitely buy again from Lumina!`,
+      location: "Verified Buyer, USA"
+    }));
+  };
+
+  const productReviews = product ? generateReviews(product.name) : [];
+  const otherProducts = products.filter(p => product && p.id !== product.id);
 
   useEffect(() => {
     const viewerInterval = setInterval(() => {
@@ -38,6 +56,20 @@ const ProductDetails = () => {
       clearInterval(timerInterval);
     };
   }, []);
+
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    const scrollInterval = setInterval(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+        if (scrollRef.current.scrollLeft + scrollRef.current.clientWidth >= scrollRef.current.scrollWidth - 10) {
+          scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+      }
+    }, 1500); // Scrolls every 1.5s for better visual pacing
+
+    return () => clearInterval(scrollInterval);
+  }, [otherProducts]);
 
   useEffect(() => {
     const found = products.find(p => p.id === parseInt(id));
@@ -214,42 +246,60 @@ const ProductDetails = () => {
         </div>
       </section>
 
-      {/* ─── Feature Showcase (Grid) ─── */}
-      <section className="pdp-showcase">
-        <div className="container">
-          <div className="showcase-grid">
-            <div className="showcase-media">
-               <div className="showcase-img-grid">
-                 <img src={product.image} alt="f1" />
-                 <img src={product.image} alt="f2" />
-                 <img src={product.image} alt="f3" />
-                 <img src={product.image} alt="f4" />
-               </div>
+      {/* ─── Product Specific Reviews (10 Reviews) ─── */}
+      <section className="container pdp-reviews-section">
+        <div className="reviews-header">
+          <h2>Customer Reviews</h2>
+          <div className="reviews-summary">
+            <div className="stars">
+              {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="#f59e0b" stroke="none" />)}
             </div>
-            <div className="showcase-content">
-               <div className="pdp-tabs-mini">
-                  {features.map((f, i) => (
-                    <button 
-                      key={i} 
-                      className={activeFeature === i ? 'active' : ''}
-                      onClick={() => setActiveFeature(i)}
-                    >
-                      {f.title}
-                    </button>
-                  ))}
-               </div>
-               <motion.div 
-                 key={activeFeature}
-                 initial={{ opacity: 0, y: 10 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 className="feature-detail"
-               >
-                 <h2>{features[activeFeature].title}</h2>
-                 <p>{features[activeFeature].desc}</p>
-                 <Link to="/" className="learn-more">Learn more about our materials <ArrowRight size={14}/></Link>
-               </motion.div>
-            </div>
+            <span>5.0 based on 10 reviews</span>
           </div>
+        </div>
+        <div className="reviews-list">
+          {productReviews.map(review => (
+            <div key={review.id} className="review-card">
+              <div className="review-top">
+                <div className="stars">
+                  {[...Array(review.rating)].map((_, i) => <Star key={i} size={14} fill="#f59e0b" stroke="none" />)}
+                </div>
+                <span className="review-date">{review.date}</span>
+              </div>
+              <h4 className="review-title">"{review.title}"</h4>
+              <p className="review-text">{review.text}</p>
+              <div className="review-author">
+                <span className="author-name">{review.name}</span>
+                <span className="author-loc"><CircleCheck size={12} color="#48bb78" /> {review.location}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Auto-Scrolling Other Products ─── */}
+      <section className="pdp-other-products">
+        <div className="container">
+          <h2 className="section-title">You Might Also Like</h2>
+        </div>
+        <div className="other-products-slider" ref={scrollRef}>
+          {otherProducts.map(prod => (
+            <div key={prod.id} className="other-product-card">
+              <Link to={`/product/${prod.id}`}>
+                <div className="other-img-wrap">
+                  <img src={prod.image} alt={prod.name} />
+                  <span className="other-badge">View</span>
+                </div>
+                <div className="other-info">
+                  <h3>{prod.name}</h3>
+                  <div className="other-price">
+                    <span>{formatPrice(prod.price)}</span>
+                    <span className="old">{formatPrice(prod.price * 1.2)}</span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
 
