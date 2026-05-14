@@ -569,7 +569,14 @@ const AdminDashboard = () => {
   const [passInput, setPassInput] = useState('');
   const [activeTab, setActiveTab] = useState('home');
   const [orders, setOrders] = useState(INITIAL_ORDERS);
+  const [collections, setCollections] = useState([
+    { id: 1, title: 'New Arrivals', products: 12, type: 'Manual' },
+    { id: 2, title: 'Best Sellers', products: 8, type: 'Smart' },
+    { id: 3, title: 'Trending Tech', products: 15, type: 'Manual' }
+  ]);
   const [viewingOrder, setViewingOrder] = useState(null);
+  const [viewingCollection, setViewingCollection] = useState(null);
+  const [isAddingCollection, setIsAddingCollection] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchQ, setSearchQ] = useState('');
@@ -904,7 +911,148 @@ const AdminDashboard = () => {
     );
   };
 
-  /* ── CUSTOMERS ── */
+  /* ── COLLECTIONS ── */
+  const renderCollections = () => {
+    if (isAddingCollection) return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="page-header-group">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button className="back-btn" onClick={() => setIsAddingCollection(false)}><ArrowLeft size={16} /> Collections</button>
+            <h1>Add collection</h1>
+          </div>
+          <button className="btn-save" onClick={() => setIsAddingCollection(false)}>Save</button>
+        </div>
+
+        <div className="sp-add-product-layout">
+          <div className="sp-main-col">
+            <div className="sp-card">
+              <div className="sp-form-group">
+                <label>Title</label>
+                <input className="sp-input" placeholder="e.g. Summer collection, Under $100" />
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1.5rem'}}>
+                <label>Description</label>
+                <div className="sp-rte" style={{minHeight: '150px', background: 'rgba(255,255,255,0.02)', padding: '1rem'}}>
+                   <p style={{color: '#555'}}>Type your collection description here...</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="sp-card">
+              <h3>Collection type</h3>
+              <div style={{marginTop: '1rem'}}>
+                <div style={{display: 'flex', gap: '1rem', alignItems: 'flex-start', marginBottom: '1rem'}}>
+                  <input type="radio" name="collType" defaultChecked style={{marginTop: '4px'}} />
+                  <div>
+                    <div className="fw-bold" style={{fontSize: '0.9rem'}}>Manual</div>
+                    <p className="text-muted" style={{fontSize: '0.8rem'}}>Add products to this collection one by one.</p>
+                  </div>
+                </div>
+                <div style={{display: 'flex', gap: '1rem', alignItems: 'flex-start'}}>
+                  <input type="radio" name="collType" style={{marginTop: '4px'}} />
+                  <div>
+                    <div className="fw-bold" style={{fontSize: '0.9rem'}}>Smart</div>
+                    <p className="text-muted" style={{fontSize: '0.8rem'}}>Existing and future products that match conditions will be added automatically.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="sp-card">
+              <div className="sp-card-header">
+                <h3>Products</h3>
+                <button className="btn-ghost-sm">Browse</button>
+              </div>
+              <div className="search-bar" style={{marginTop: '1rem', background: 'rgba(255,255,255,0.03)'}}>
+                <Search size={14} />
+                <input placeholder="Search products..." />
+              </div>
+              <div style={{textAlign: 'center', padding: '3rem', color: '#555'}}>
+                <ImageIcon size={40} style={{opacity: 0.2, marginBottom: '1rem'}} />
+                <p>There are no products in this collection.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="sp-side-col">
+            <div className="sp-card">
+              <div className="sp-card-header">
+                <h3>Publishing</h3>
+                <span style={{color: '#7c6af7', fontSize: '0.8rem', cursor: 'pointer'}}>Manage</span>
+              </div>
+              <div style={{marginTop: '1rem', fontSize: '0.85rem'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px'}}>
+                  <div style={{width: '6px', height: '6px', borderRadius: '50%', background: '#48bb78'}}></div>
+                  Online Store
+                </div>
+                <div style={{display: 'flex', alignItems: 'center', gap: '10px', color: '#555'}}>
+                  <div style={{width: '6px', height: '6px', borderRadius: '50%', background: '#555'}}></div>
+                  Point of Sale
+                </div>
+              </div>
+            </div>
+
+            <div className="sp-card">
+               <h3>Collection image</h3>
+               <div className="sp-upload-zone" style={{height: '140px', marginTop: '1rem'}}>
+                  <ImageIcon size={24} style={{opacity: 0.3}} />
+                  <p style={{fontSize: '0.8rem', marginTop: '0.5rem'}}>Add image</p>
+               </div>
+            </div>
+
+            <div className="sp-card">
+               <h3>Theme template</h3>
+               <select className="sp-input" style={{marginTop: '1rem'}}>
+                  <option>Default collection</option>
+               </select>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    );
+
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="page-header-group">
+          <h1>Collections <span className="count-badge">{collections.length}</span></h1>
+          <button className="btn-save" onClick={() => setIsAddingCollection(true)}>Add collection</button>
+        </div>
+
+        <div className="sp-table-wrapper dashboard-card" style={{padding: 0}}>
+           <div style={{padding: '0.75rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '0.75rem', alignItems: 'center'}}>
+               <div className="search-bar" style={{margin: 0, flex: 1, height: '32px', background: 'rgba(255,255,255,0.03)'}}>
+                 <Search size={14} />
+                 <input placeholder="Search collections..." />
+               </div>
+            </div>
+            <table className="admin-table">
+               <thead>
+                  <tr>
+                    <th style={{width: '40px'}}><input type="checkbox"/></th>
+                    <th style={{width: '60px'}}></th>
+                    <th>Title</th>
+                    <th>Products</th>
+                    <th>Product conditions</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {collections.map(c => (
+                    <tr key={c.id}>
+                      <td><input type="checkbox"/></td>
+                      <td>
+                        <div className="sp-prod-thumb"><ImageIcon size={14} style={{opacity: 0.3}} /></div>
+                      </td>
+                      <td className="fw-bold" style={{color: '#fff'}}>{c.title}</td>
+                      <td>{c.products}</td>
+                      <td className="text-muted" style={{fontSize: '0.85rem'}}>{c.type === 'Manual' ? 'Manual' : 'Product title contains...'}</td>
+                    </tr>
+                  ))}
+               </tbody>
+            </table>
+        </div>
+      </motion.div>
+    );
+  };
   const renderCustomers = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div className="page-header-group">
@@ -943,6 +1091,7 @@ const AdminDashboard = () => {
       case 'home': return renderHome();
       case 'orders': return renderOrders();
       case 'products': return renderProducts();
+      case 'collections': return renderCollections();
       case 'customers': return renderCustomers();
       case 'store': return <Home />;
       default: return renderHome();
@@ -953,6 +1102,7 @@ const AdminDashboard = () => {
     { id: 'home', label: 'Dashboard', icon: <HomeIcon size={17} /> },
     { id: 'orders', label: 'Orders', icon: <Inbox size={17} />, badge: orders.filter(o => o.status === 'pending').length },
     { id: 'products', label: 'Products', icon: <Tag size={17} />, badge: products.length },
+    { id: 'collections', label: 'Collections', icon: <BarChart3 size={17} /> },
     { id: 'customers', label: 'Customers', icon: <Users size={17} /> },
     { id: 'store', label: 'Online Store', icon: <Store size={17} /> },
   ];
