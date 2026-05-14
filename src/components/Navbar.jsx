@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingBag, Globe } from 'lucide-react';
+import { Search, ShoppingBag, Globe, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop, regions } from '../context/ShopContext';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
 const announcements = [
-  "🔥 Limited Time 40% OFF Sitewide",
-  "🚚 Free USA Shipping on Orders Above $50",
-  "⭐ Trusted by 10,000+ Happy Customers"
+  "FREE EXPRESS SHIPPING ON USA ORDERS OVER $50",
+  "NEW SEASON DROP: EXPLORE THE FUTURE OF LIVING",
+  "JOIN OUR COMMUNITY FOR 20% OFF YOUR FIRST ORDER"
 ];
 
 const Navbar = ({ onCartOpen }) => {
@@ -17,14 +17,15 @@ const Navbar = ({ onCartOpen }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [announcementIdx, setAnnouncementIdx] = useState(0);
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     
     const interval = setInterval(() => {
       setAnnouncementIdx(prev => (prev + 1) % announcements.length);
-    }, 4000);
+    }, 5000);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -34,101 +35,83 @@ const Navbar = ({ onCartOpen }) => {
 
   return (
     <>
-      {/* Announcement Bar */}
-      <div className="announcement-bar">
+      <div className="announcement-bar-v3">
         <AnimatePresence mode="wait">
           <motion.div
             key={announcementIdx}
-            initial={{ opacity: 0, y: 5 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.5 }}
+            className="ann-text"
           >
             {announcements[announcementIdx]}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
-        className={`navbar ${isScrolled ? 'scrolled' : ''}`}
-        style={{ top: '32px' }}
-      >
-        <div className="container navbar-inner">
-          {/* Brand */}
-          <div className="nav-brand">
-            <Link to="/">
-              <img src={logoImg} alt="Lumina" className="nav-logo" />
-              <span className="brand-text">LUMINA</span>
-            </Link>
-          </div>
+      <header className={`navbar-v3 ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="container nav-inner-v3">
+          {/* Logo */}
+          <Link to="/" className="nav-logo-v3">
+            <img src={logoImg} alt="Lumina" />
+            <span>LUMINA</span>
+          </Link>
 
-          {/* Links */}
-          <nav className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/shop">Shop</Link>
-            <Link to="/shop">Best Sellers</Link>
-            <Link to="/shop">New Arrivals</Link>
-            <Link to="/track-order">Track Order</Link>
-            <Link to="/faq">FAQ</Link>
+          {/* Desktop Nav */}
+          <nav className="nav-menu-v3">
+            <Link to="/shop" className="nav-item-v3">Shop All</Link>
+            <Link to="/shop" className="nav-item-v3">New Arrivals</Link>
+            <Link to="/shop" className="nav-item-v3">Best Sellers</Link>
+            <Link to="/track-order" className="nav-item-v3">Track</Link>
           </nav>
 
           {/* Actions */}
-          <div className="nav-actions">
-            {/* Language */}
-            <div
-              className="lang-selector"
-              onMouseEnter={() => setLangOpen(true)}
-              onMouseLeave={() => setLangOpen(false)}
-            >
-              <button className="action-btn globe-btn">
-                <Globe size={15} />
-                <span>{region.code}</span>
-              </button>
+          <div className="nav-actions-v3">
+            <button className="nav-action-btn-v3 globe-wrap" onMouseEnter={() => setLangOpen(true)} onMouseLeave={() => setLangOpen(false)}>
+              <Globe size={18} />
+              <span className="region-code">{region.code}</span>
               <AnimatePresence>
                 {langOpen && (
-                  <motion.ul
-                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.97 }}
-                    transition={{ duration: 0.18 }}
-                    className="lang-dropdown"
-                  >
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="region-dropdown-v3">
                     {regions.map(r => (
-                      <li key={r.code} onClick={() => { setRegion(r); setLangOpen(false); }}>
-                        <span>{r.name}</span>
-                        <span style={{ marginLeft: 'auto', opacity: 0.5, fontSize: '0.7rem' }}>{r.currency}</span>
-                      </li>
+                      <div key={r.code} className="region-opt" onClick={() => setRegion(r)}>
+                        {r.name} <span>{r.currency}</span>
+                      </div>
                     ))}
-                  </motion.ul>
+                  </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-
-            {/* Search */}
-            <button className="action-btn" aria-label="Search">
-              <Search size={17} />
             </button>
-
-            {/* Cart */}
-            <button
-              className="action-btn cart-btn"
-              aria-label="Cart"
-              onClick={onCartOpen}
-            >
-              <ShoppingBag size={17} />
-              <span className="cart-label">Cart</span>
-              {cartCount > 0 && (
-                <span className="cart-badge">{cartCount}</span>
-              )}
+            <button className="nav-action-btn-v3"><Search size={18} /></button>
+            <button className="nav-action-btn-v3 cart-trigger-v3" onClick={onCartOpen}>
+              <ShoppingBag size={18} />
+              {cartCount > 0 && <span className="cart-dot-v3">{cartCount}</span>}
+            </button>
+            <button className="nav-action-btn-v3 mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)}>
+              {mobileMenu ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenu && (
+          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="mobile-overlay-v3">
+             <nav className="mobile-nav-links">
+                <Link to="/shop" onClick={() => setMobileMenu(false)}>Shop All</Link>
+                <Link to="/shop" onClick={() => setMobileMenu(false)}>New Arrivals</Link>
+                <Link to="/shop" onClick={() => setMobileMenu(false)}>Best Sellers</Link>
+                <Link to="/track-order" onClick={() => setMobileMenu(false)}>Track Order</Link>
+                <Link to="/faq" onClick={() => setMobileMenu(false)}>FAQ</Link>
+             </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
 
 export default Navbar;
+

@@ -1,162 +1,80 @@
 /* =============================================
    FOOTER
 ============================================= */
-.main-footer {
-  background: #060609;
+.footer-v3 {
+  background: #000;
   border-top: 1px solid var(--border-white);
-  margin-top: 2rem;
-}
-
-/* Top Section */
-.footer-top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.4fr;
-  gap: 3rem;
-  padding: 5rem 0 4rem;
-}
-
-/* Brand Column */
-.footer-brand-col {}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 1.25rem;
-}
-
-.footer-logo img {
-  height: 26px;
-  width: auto;
-  filter: brightness(0.9);
-}
-
-.footer-logo span {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 3px;
-  background: linear-gradient(135deg, #ffffff, var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.footer-tagline {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-  max-width: 280px;
-  margin-bottom: 1.75rem;
-}
-
-/* Social */
-.footer-socials {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.social-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  transition: var(--transition-smooth);
-}
-
-.social-btn:hover {
-  background: rgba(124,106,247,0.15);
-  border-color: var(--accent-primary);
-  color: var(--accent-secondary);
-  transform: translateY(-2px);
-}
-
-/* Columns */
-.footer-col {}
-
-.footer-col-title {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--text-main);
-  margin-bottom: 1.25rem;
-}
-
-.footer-links li {
-  margin-bottom: 0.65rem;
-}
-
-.footer-links a {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  transition: var(--transition-fast);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.footer-links a:hover {
-  color: var(--text-main);
-  padding-left: 4px;
-}
-
-.footer-badge {
-  font-size: 0.62rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  padding: 8rem 0 4rem;
   color: #fff;
-  padding: 0.15rem 0.45rem;
-  border-radius: 100px;
-  letter-spacing: 0.5px;
 }
 
-/* Contact */
-.footer-contact {
+.footer-v3-main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+  margin-bottom: 6rem;
+}
+
+.footer-v3-brand {
+  max-width: 350px;
+}
+
+.footer-logo-v3 {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
   margin-bottom: 1.5rem;
 }
 
-.footer-contact li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  font-size: 0.82rem;
+.footer-logo-v3 img { height: 32px; filter: brightness(1.2); }
+.footer-logo-v3 span {
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  font-family: var(--font-display);
+}
+
+.footer-desc {
+  font-size: 0.9rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.8;
+  margin-bottom: 2rem;
 }
 
-.footer-contact li svg {
-  flex-shrink: 0;
-  color: var(--accent-secondary);
-  margin-top: 2px;
-}
-
-/* Trust Badges */
-.footer-trust-badges {
+.footer-socials-v3 {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
-.trust-badge-pill {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  border: 1px solid var(--border-subtle);
-  border-radius: 100px;
-  padding: 0.3rem 0.75rem;
-  background: rgba(124,106,247,0.05);
+.footer-socials-v3 a {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all 0.3s;
 }
 
+.footer-socials-v3 a:hover {
+  background: var(--accent-primary);
+  transform: translateY(-3px);
+}
+
+.footer-v3-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.footer-col-v3 h5 {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
 /* Bottom Bar */
 .footer-bottom {
   border-top: 1px solid var(--border-white);
