@@ -565,8 +565,16 @@ const ProductModal = ({ product, onSave, onClose }) => {
 /* ─── MAIN ADMIN COMPONENT ──────────────────── */
 const AdminDashboard = () => {
   const { addCustomProduct, products, deleteProduct, updateProduct } = useShop();
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('admin_auth') === 'true');
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('admin_auth') === 'true');
   const [passInput, setPassInput] = useState('');
+  const [adminPassword, setAdminPassword] = useState(localStorage.getItem('admin_password') || 'admin123');
+  
+  // Forgot Password State
+  const [loginStep, setLoginStep] = useState('login'); // login, forgot, otp, reset
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [otpInput, setOtpInput] = useState('');
+  const [newPassForm, setNewPassForm] = useState({ p1: '', p2: '' });
+
   const [activeTab, setActiveTab] = useState('home');
   const [orders, setOrders] = useState(INITIAL_ORDERS);
   const [collections, setCollections] = useState([
@@ -586,8 +594,21 @@ const AdminDashboard = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (passInput === 'admin123') { setIsLoggedIn(true); localStorage.setItem('admin_auth', 'true'); }
-    else alert('Wrong password. Hint: admin123');
+    if (passInput === adminPassword) { 
+      setIsLoggedIn(true); 
+      localStorage.setItem('admin_auth', 'true'); 
+    }
+    else alert('Incorrect password.');
+  };
+
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    if (newPassForm.p1 !== newPassForm.p2) return alert('Passwords do not match');
+    setAdminPassword(newPassForm.p1);
+    localStorage.setItem('admin_password', newPassForm.p1);
+    alert('Password updated successfully! Please login.');
+    setLoginStep('login');
+    setPassInput('');
   };
 
   const handleSaveProduct = (data) => {
@@ -622,26 +643,104 @@ const AdminDashboard = () => {
         <div className="admin-login-logo">
           <div className="admin-logo-icon">L</div>
           <h1>Lumina HQ</h1>
-          <p>Admin Control Panel</p>
+          <p>{loginStep === 'login' ? 'Admin Control Panel' : 'Account Recovery'}</p>
         </div>
-        <form onSubmit={handleLogin} className="admin-login-form">
-          <div className="sp-form-group">
-            <label style={{display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem'}}>Password</label>
-            <input 
-              type="password" 
-              value={passInput} 
-              onChange={e => setPassInput(e.target.value)} 
-              placeholder="Enter admin password..." 
-              autoFocus 
-              className="sp-input"
-              style={{ width: '100%', padding: '12px 16px', fontSize: '1rem' }}
-            />
+
+        {loginStep === 'login' && (
+          <form onSubmit={handleLogin} className="admin-login-form">
+            <div className="sp-form-group">
+              <label style={{display: 'block', marginBottom: '8px', color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem'}}>Password</label>
+              <input 
+                type="password" 
+                value={passInput} 
+                onChange={e => setPassInput(e.target.value)} 
+                placeholder="Enter admin password..." 
+                autoFocus 
+                className="sp-input"
+                style={{ width: '100%', padding: '12px 16px', fontSize: '1rem' }}
+              />
+            </div>
+            <div style={{textAlign: 'right', marginBottom: '1.5rem'}}>
+              <span 
+                style={{color: '#7c6af7', fontSize: '0.85rem', cursor: 'pointer'}}
+                onClick={() => setLoginStep('forgot')}
+              >Forgot password?</span>
+            </div>
+            <button type="submit" className="btn-save" style={{ width: '100%', justifyContent: 'center', padding: '0.85rem' }}>
+              <Lock size={16} /> Access Panel
+            </button>
+          </form>
+        )}
+
+        {loginStep === 'forgot' && (
+          <div className="admin-login-form">
+            <div className="sp-form-group">
+               <label>Enter registered email</label>
+               <input 
+                 className="sp-input" 
+                 placeholder="e.g. numannaeem134@gmail.com"
+                 value={forgotEmail}
+                 onChange={e => setForgotEmail(e.target.value)}
+               />
+            </div>
+            <button 
+              className="btn-save" 
+              style={{width: '100%', marginTop: '1rem'}}
+              onClick={() => {
+                if (forgotEmail === 'numannaeem134@gmail.com') setLoginStep('otp');
+                else alert('Email not found.');
+              }}
+            >Send Code</button>
+            <button className="btn-ghost-sm" style={{width: '100%', marginTop: '0.8rem', border: 'none'}} onClick={() => setLoginStep('login')}>Back to Login</button>
           </div>
-          <button type="submit" className="btn-save" style={{ width: '100%', justifyContent: 'center', padding: '0.85rem', marginTop: '1rem' }}>
-            <Lock size={16} /> Access Panel
-          </button>
-        </form>
-        <p className="login-hint">Demo: admin123</p>
+        )}
+
+        {loginStep === 'otp' && (
+          <div className="admin-login-form">
+            <p style={{fontSize: '0.9rem', color: '#8b8ba3', marginBottom: '1.5rem'}}>We sent a code to {forgotEmail}</p>
+            <div className="sp-form-group">
+               <label>Verification Code</label>
+               <input 
+                 className="sp-input" 
+                 placeholder="Enter 6-digit code"
+                 value={otpInput}
+                 onChange={e => setOtpInput(e.target.value)}
+               />
+            </div>
+            <button 
+              className="btn-save" 
+              style={{width: '100%', marginTop: '1rem'}}
+              onClick={() => {
+                if (otpInput === '123456') setLoginStep('reset');
+                else alert('Invalid code. Try 123456');
+              }}
+            >Verify Code</button>
+          </div>
+        )}
+
+        {loginStep === 'reset' && (
+          <form onSubmit={handleResetPassword} className="admin-login-form">
+            <div className="sp-form-group">
+               <label>New Password</label>
+               <input 
+                 type="password"
+                 className="sp-input" 
+                 value={newPassForm.p1}
+                 onChange={e => setNewPassForm({...newPassForm, p1: e.target.value})}
+               />
+            </div>
+            <div className="sp-form-group" style={{marginTop: '1rem'}}>
+               <label>Confirm New Password</label>
+               <input 
+                 type="password"
+                 className="sp-input" 
+                 value={newPassForm.p2}
+                 onChange={e => setNewPassForm({...newPassForm, p2: e.target.value})}
+               />
+            </div>
+            <button type="submit" className="btn-save" style={{width: '100%', marginTop: '1.5rem'}}>Update Password</button>
+          </form>
+        )}
       </motion.div>
     </div>
   );
@@ -1082,6 +1181,45 @@ const AdminDashboard = () => {
       </motion.div>
     );
   };
+  const renderSettings = () => {
+    const [settForm, setSettForm] = useState({ old: '', n1: '', n2: '' });
+    const handleUpdate = (e) => {
+      e.preventDefault();
+      if (settForm.old !== adminPassword) return alert('Current password incorrect');
+      if (settForm.n1 !== settForm.n2) return alert('New passwords do not match');
+      setAdminPassword(settForm.n1);
+      localStorage.setItem('admin_password', settForm.n1);
+      alert('Password updated successfully!');
+      setSettForm({ old: '', n1: '', n2: '' });
+    };
+
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <div className="page-header-group">
+          <h1>Account Settings</h1>
+        </div>
+        <div className="sp-card" style={{maxWidth: '500px'}}>
+           <h3 style={{marginBottom: '1.5rem'}}>Change Admin Password</h3>
+           <form onSubmit={handleUpdate} className="admin-login-form">
+              <div className="sp-form-group">
+                 <label>Current Password</label>
+                 <input type="password" className="sp-input" value={settForm.old} onChange={e => setSettForm({...settForm, old: e.target.value})} />
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1rem'}}>
+                 <label>New Password</label>
+                 <input type="password" className="sp-input" value={settForm.n1} onChange={e => setSettForm({...settForm, n1: e.target.value})} />
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1rem'}}>
+                 <label>Confirm New Password</label>
+                 <input type="password" className="sp-input" value={settForm.n2} onChange={e => setSettForm({...settForm, n2: e.target.value})} />
+              </div>
+              <button type="submit" className="btn-save" style={{marginTop: '1.5rem', width: '100%'}}>Update Account</button>
+           </form>
+        </div>
+      </motion.div>
+    );
+  };
+
   const renderCustomers = () => (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div className="page-header-group">
@@ -1122,6 +1260,7 @@ const AdminDashboard = () => {
       case 'products': return renderProducts();
       case 'collections': return renderCollections();
       case 'customers': return renderCustomers();
+      case 'settings': return renderSettings();
       case 'store': return <Home />;
       default: return renderHome();
     }
@@ -1134,6 +1273,7 @@ const AdminDashboard = () => {
     { id: 'collections', label: 'Collections', icon: <BarChart3 size={17} /> },
     { id: 'customers', label: 'Customers', icon: <Users size={17} /> },
     { id: 'store', label: 'Online Store', icon: <Store size={17} /> },
+    { id: 'settings', label: 'Settings', icon: <Lock size={17} /> },
   ];
 
   return (
