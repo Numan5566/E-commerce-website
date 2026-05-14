@@ -247,37 +247,113 @@ h1, h2, h3, h4 {
   transform: scale(1.1);
 }
 
-/* ─── GIFT SECTION ─── */
-.gift-banner {
-  height: 450px;
-  background: linear-gradient(to right, #E8D8C3, #FDF9F3);
-  display: flex;
+/* ─── COLLECTION GRIDS ─── */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.collection-item {
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+}
+
+.collection-item img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 2px;
+  transition: transform 0.5s ease;
+}
+
+.collection-item:hover img {
+  transform: scale(1.03);
+}
+
+.collection-item span {
+  display: block;
+  margin-top: 15px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ─── FEATURE SLIDER ─── */
+.feature-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  padding: 0 60px;
+  gap: 80px;
+  padding: 100px 0;
+}
+
+.feature-img-wrap {
   position: relative;
-  overflow: hidden;
-  border-radius: 4px;
+  width: 100%;
+  height: 600px;
 }
 
-.gift-banner img {
-  position: absolute;
-  right: -20px;
-  bottom: 0;
-  height: 90%;
-  object-fit: contain;
+.feature-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* ─── PRESS LOGOS ─── */
-.press-marquee {
+/* ─── REVIEW CARDS ─── */
+.review-section {
+  padding: 100px 0;
+  background: #fff;
+  text-align: center;
+}
+
+.review-grid {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 40px 0;
-  opacity: 0.6;
-  filter: grayscale(1);
+  gap: 30px;
+  margin-top: 50px;
+  overflow-x: auto;
+  padding: 20px;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
 }
 
-.press-marquee img {
-  height: 35px;
-  width: auto;
+.review-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.review-card {
+  min-width: 450px;
+  background: #FDF9F3;
+  border-radius: 15px;
+  display: flex;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.review-img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+}
+
+.review-content {
+  padding: 30px;
+  flex: 1;
+}
+
+.review-content h4 {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.review-content p {
+  font-size: 0.75rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
 }
