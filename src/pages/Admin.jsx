@@ -45,7 +45,6 @@ const INITIAL_ORDERS = [
   },
 ];
 
-/* ─── Stat Card ─────────────────────────────── */
 const StatCard = ({ icon, label, value, sub, color }) => (
   <div className="stat-card">
     <div className="stat-card-icon" style={{ background: color }}>{icon}</div>
@@ -56,6 +55,34 @@ const StatCard = ({ icon, label, value, sub, color }) => (
     </div>
   </div>
 );
+
+/* ─── Custom Centered Confirm Modal ────────── */
+const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, type = 'danger' }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="custom-modal-overlay">
+      <motion.div 
+        className="custom-modal-box"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+      >
+        <div className="custom-modal-header">
+          <h3>{title}</h3>
+        </div>
+        <div className="custom-modal-body">
+          <p>{message}</p>
+        </div>
+        <div className="custom-modal-footer">
+          <button className="btn-cancel" onClick={onCancel}>Cancel</button>
+          <button className={`btn-confirm ${type}`} onClick={onConfirm}>
+            {type === 'danger' ? 'Delete' : 'Confirm'}
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 
 /* ─── Add / Edit Product Page (Shopify Style) ──────────────── */
 const ProductModal = ({ product, onSave, onClose }) => {
@@ -546,6 +573,7 @@ const AdminDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchQ, setSearchQ] = useState('');
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, productId: null });
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -566,6 +594,12 @@ const AdminDashboard = () => {
 
   const openEdit = (p) => { setEditingProduct(p); setShowModal(true); };
   const openAdd = () => { setEditingProduct(null); setShowModal(true); };
+
+  const askDelete = (id) => setConfirmModal({ isOpen: true, productId: id });
+  const confirmDelete = () => {
+    deleteProduct(confirmModal.productId);
+    setConfirmModal({ isOpen: false, productId: null });
+  };
 
   const navigate = tab => { setActiveTab(tab); setViewingOrder(null); };
 
@@ -816,7 +850,7 @@ const AdminDashboard = () => {
                   <td>
                     <div style={{display: 'flex', gap: '0.4rem'}}>
                       <button className="btn-edit-sm" onClick={() => openEdit(p)}><Edit2 size={13}/></button>
-                      <button className="btn-del-sm" onClick={() => { if(window.confirm('Delete?')) deleteProduct(p.id); }}><Trash2 size={13}/></button>
+                      <button className="btn-del-sm" onClick={() => askDelete(p.id)}><Trash2 size={13}/></button>
                     </div>
                   </td>
                 </tr>
@@ -937,6 +971,14 @@ const AdminDashboard = () => {
           />
         )}
       </AnimatePresence>
+
+      <ConfirmModal 
+        isOpen={confirmModal.isOpen}
+        title="Delete Product?"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+        onConfirm={() => confirmDelete(confirmModal.productId)}
+        onCancel={() => setConfirmModal({ isOpen: false, productId: null })}
+      />
     </div>
   );
 };
