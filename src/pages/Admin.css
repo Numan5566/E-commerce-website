@@ -661,11 +661,11 @@
 .sp-page-overlay {
   position: fixed;
   inset: 0;
-  background: #f4f6f8; /* Shopify light background */
+  background: #09090f; /* Dark admin background */
   z-index: 9999;
   overflow-y: auto;
-  color: #202223; /* Dark text for light theme */
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color: #e0e0f0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .sp-page {
@@ -690,7 +690,7 @@
 .sp-back-btn {
   background: none;
   border: none;
-  color: #202223;
+  color: #e0e0f0;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -698,12 +698,12 @@
   padding: 0.4rem;
   border-radius: 4px;
 }
-.sp-back-btn:hover { background: #e4e5e7; }
+.sp-back-btn:hover { background: rgba(255,255,255,0.08); }
 
 .sp-header-left h2 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #202223;
+  color: #e0e0f0;
   margin: 0;
 }
 
@@ -713,15 +713,15 @@
 }
 
 .sp-btn-discard {
-  background: none;
-  border: none;
-  color: #202223;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e0e0f0;
   font-weight: 500;
   cursor: pointer;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
 }
-.sp-btn-discard:hover { background: #e4e5e7; }
+.sp-btn-discard:hover { background: rgba(255,255,255,0.1); }
 
 .sp-btn-save {
   background: #008060;
@@ -745,17 +745,17 @@
 .sp-side-col { display: flex; flex-direction: column; gap: 1.5rem; }
 
 .sp-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 0 1px rgba(63,63,68,0.05), 0 1px 3px 0 rgba(63,63,68,0.15);
+  background: #111120;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
   padding: 1.25rem;
 }
 
 .sp-card h3 {
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 1rem;
-  color: #202223;
+  color: #e0e0f0;
 }
 
 .sp-form-group {
@@ -765,37 +765,41 @@
 }
 
 .sp-form-group label {
-  font-size: 0.85rem;
-  color: #202223;
+  font-size: 0.8rem;
+  color: rgba(170,170,200,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 .sp-input {
-  border: 1px solid #c9cccf;
-  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
-  color: #202223;
+  color: #e0e0f0;
+  background: rgba(255,255,255,0.04);
   width: 100%;
   box-sizing: border-box;
 }
 .sp-input:focus {
   outline: none;
-  border-color: #008060;
-  box-shadow: 0 0 0 1px #008060;
+  border-color: #7c6af7;
+  box-shadow: 0 0 0 2px rgba(124,106,247,0.2);
 }
-.sp-input.disabled { background: #f4f6f8; color: #6d7175; }
+.sp-input.disabled { background: rgba(255,255,255,0.02); color: #48bb78; }
 
 .sp-rte {
-  border: 1px solid #c9cccf;
-  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
   overflow: hidden;
 }
 .sp-rte-toolbar {
   display: flex;
   gap: 0.2rem;
   padding: 0.5rem;
-  border-bottom: 1px solid #c9cccf;
-  background: #fafbfb;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
 }
 .sp-rte-toolbar button, .sp-rte-toolbar select {
   background: none;
@@ -803,9 +807,9 @@
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
-  color: #202223;
+  color: #c0c0e0;
 }
-.sp-rte-toolbar button:hover { background: #e4e5e7; }
+.sp-rte-toolbar button:hover { background: rgba(255,255,255,0.08); }
 .sp-rte-toolbar .bold { font-weight: bold; }
 .sp-rte-toolbar .italic { font-style: italic; }
 .sp-rte-toolbar .underline { text-decoration: underline; }
@@ -816,24 +820,26 @@
   resize: vertical;
   font-family: inherit;
   font-size: 0.9rem;
+  background: transparent;
+  color: #e0e0f0;
 }
 .sp-rte textarea:focus { outline: none; }
 
 .sp-upload-zone {
-  border: 2px dashed #c9cccf;
+  border: 2px dashed rgba(255,255,255,0.15);
   border-radius: 8px;
   padding: 2rem 1rem;
   text-align: center;
-  background: #fafbfb;
+  background: rgba(255,255,255,0.02);
   transition: all 0.2s;
 }
 .sp-upload-zone:hover {
-  border-color: #008060;
-  background: #f0f9f6;
+  border-color: #7c6af7;
+  background: rgba(124,106,247,0.05);
 }
 .sp-dragging {
-  border-color: #008060 !important;
-  background: #e6f4f1 !important;
+  border-color: #7c6af7 !important;
+  background: rgba(124,106,247,0.1) !important;
   transform: scale(1.01);
 }
 .sp-upload-icon {
@@ -880,24 +886,26 @@
   margin-bottom: 0.5rem;
 }
 .sp-upload-btn {
-  background: #fff;
-  border: 1px solid #c9cccf;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  color: #e0e0f0;
+  transition: all 0.2s;
 }
+.sp-upload-btn:hover { background: rgba(124,106,247,0.2); border-color: #7c6af7; }
 .sp-upload-text {
   font-size: 0.85rem;
-  color: #2c6ecb;
+  color: #a78bfa;
   cursor: pointer;
   text-decoration: underline;
 }
 .sp-upload-hint {
   font-size: 0.8rem;
-  color: #6d7175;
+  color: rgba(170,170,200,0.5);
 }
 
 .sp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -906,15 +914,16 @@
 .sp-input-with-prefix {
   display: flex;
   align-items: center;
-  border: 1px solid #c9cccf;
-  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
   overflow: hidden;
+  background: rgba(255,255,255,0.04);
 }
 .sp-input-with-prefix .prefix {
   padding: 0.5rem 0.75rem;
-  background: #fafbfb;
-  border-right: 1px solid #c9cccf;
-  color: #6d7175;
+  background: rgba(255,255,255,0.04);
+  border-right: 1px solid rgba(255,255,255,0.1);
+  color: rgba(170,170,200,0.5);
   font-size: 0.85rem;
 }
 .sp-input-with-prefix input {
@@ -922,28 +931,33 @@
   border: none;
   padding: 0.5rem;
   font-size: 0.9rem;
+  background: transparent;
+  color: #e0e0f0;
 }
 .sp-input-with-prefix input:focus { outline: none; }
 
 .sp-input-with-suffix {
   display: flex;
   align-items: center;
-  border: 1px solid #c9cccf;
-  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
   overflow: hidden;
+  background: rgba(255,255,255,0.04);
 }
 .sp-input-with-suffix input {
   flex: 1;
   border: none;
   padding: 0.5rem;
   font-size: 0.9rem;
+  background: transparent;
+  color: #e0e0f0;
 }
 .sp-input-with-suffix input:focus { outline: none; }
 .sp-input-with-suffix .suffix {
   padding: 0.5rem 0.75rem;
-  background: #fafbfb;
-  border-left: 1px solid #c9cccf;
-  color: #6d7175;
+  background: rgba(255,255,255,0.04);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  color: rgba(170,170,200,0.5);
   font-size: 0.85rem;
 }
 
@@ -953,12 +967,12 @@
   gap: 0.5rem;
   margin-top: 1rem;
   font-size: 0.85rem;
-  color: #202223;
+  color: #c0c0e0;
 }
 
 .sp-divider {
   height: 1px;
-  background: #e1e3e5;
+  background: rgba(255,255,255,0.07);
   margin: 1.5rem 0;
 }
 
@@ -974,18 +988,19 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
+  color: rgba(170,170,200,0.6);
 }
 
 .sp-filter-row {
   display: flex;
   gap: 1rem;
   font-size: 0.85rem;
-  color: #2c6ecb;
+  color: #a78bfa;
 }
 
 .sp-badge {
-  background: #e4e5e7;
-  color: #202223;
+  background: rgba(255,255,255,0.08);
+  color: #c0c0e0;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -993,7 +1008,7 @@
 }
 
 .sp-link-text {
-  color: #2c6ecb;
+  color: #a78bfa;
   font-size: 0.85rem;
   cursor: pointer;
 }
@@ -1002,20 +1017,102 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #6d7175;
+  color: rgba(170,170,200,0.5);
 }
 
 .sp-input-tag {
-  border: 1px solid #c9cccf;
-  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
-  color: #6d7175;
+  color: rgba(170,170,200,0.4);
   cursor: text;
-  background: #fafbfb;
+  background: rgba(255,255,255,0.02);
 }
 
-/* =============================================
+/* Collections checklist */
+.sp-collection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.sp-col-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #c0c0e0;
+  transition: all 0.15s;
+}
+.sp-col-item:hover { background: rgba(124,106,247,0.08); border-color: rgba(124,106,247,0.2); }
+.sp-col-item.selected { background: rgba(124,106,247,0.15); border-color: rgba(124,106,247,0.4); color: #a78bfa; font-weight: 600; }
+.sp-col-item input[type="checkbox"] { accent-color: #7c6af7; cursor: pointer; }
+
+/* Tag Chips */
+.sp-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+  min-height: 42px;
+  align-items: center;
+}
+.sp-tag-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(124,106,247,0.2);
+  color: #a78bfa;
+  border: 1px solid rgba(124,106,247,0.3);
+  padding: 0.2rem 0.5rem 0.2rem 0.7rem;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.sp-tag-chip button {
+  background: none;
+  border: none;
+  color: #a78bfa;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+}
+.sp-tag-chip button:hover { color: #f43f5e; }
+.sp-tag-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #e0e0f0;
+  font-size: 0.85rem;
+  outline: none;
+  min-width: 120px;
+}
+.sp-tag-input::placeholder { color: rgba(170,170,200,0.3); }
+
+.sp-remove-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #f43f5e;
+  transition: all 0.2s;
+}
+.sp-remove-btn:hover {
+  background: rgba(244,63,94,0.1);
+  border-color: #f43f5e;
+}/* =============================================
    LOGIN PAGE
 ============================================= */
 .admin-login-page {

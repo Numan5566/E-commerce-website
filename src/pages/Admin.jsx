@@ -67,6 +67,23 @@ const ProductModal = ({ product, onSave, onClose }) => {
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const fileInputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [customVendor, setCustomVendor] = useState('');
+
+  const ALL_COLLECTIONS = ['New Arrivals', 'Best Sellers', 'Trending Tech', 'Chargers & Gadgets', 'Home Essentials', 'Viral Products'];
+
+  const addTag = (e) => {
+    if ((e.key === 'Enter' || e.key === ',') && tagInput.trim()) {
+      e.preventDefault();
+      if (!tags.includes(tagInput.trim())) setTags(prev => [...prev, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (t) => setTags(prev => prev.filter(x => x !== t));
+  const toggleCollection = (c) => setCollections(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -88,7 +105,15 @@ const ProductModal = ({ product, onSave, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ ...form, price: parseFloat(form.price || 0), buyPrice: parseFloat(form.buyPrice || 0), stock: parseInt(form.stock || 0) });
+    onSave({
+      ...form,
+      price: parseFloat(form.price || 0),
+      buyPrice: parseFloat(form.buyPrice || 0),
+      stock: parseInt(form.stock || 0),
+      tags,
+      collections,
+      vendor: form.vendor === '__custom__' ? customVendor : form.vendor
+    });
   };
 
   return (
@@ -323,21 +348,61 @@ const ProductModal = ({ product, onSave, onClose }) => {
                 <label>Type</label>
                 <select className="sp-input" value={form.type} onChange={e => set('type', e.target.value)}>
                   <option value="None">None</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Tech Accessories">Tech Accessories</option>
+                  <option value="Charging">Charging</option>
+                  <option value="Home & Living">Home & Living</option>
+                  <option value="Gadgets">Gadgets</option>
+                  <option value="Wellness">Wellness</option>
+                  <option value="Fashion">Fashion</option>
                 </select>
               </div>
               <div className="sp-form-group" style={{marginTop: '1rem'}}>
                 <label>Vendor</label>
                 <select className="sp-input" value={form.vendor} onChange={e => set('vendor', e.target.value)}>
-                  <option value="None">None</option>
+                  <option value="Lumina Minimal">Lumina Minimal (Your Store)</option>
+                  <option value="AliExpress">AliExpress</option>
+                  <option value="Amazon">Amazon</option>
+                  <option value="__custom__">+ Add Custom Vendor</option>
                 </select>
+                {form.vendor === '__custom__' && (
+                  <input
+                    className="sp-input"
+                    style={{marginTop: '0.5rem'}}
+                    placeholder="Type vendor name..."
+                    value={customVendor}
+                    onChange={e => setCustomVendor(e.target.value)}
+                  />
+                )}
               </div>
               <div className="sp-form-group" style={{marginTop: '1rem'}}>
                 <label>Collections</label>
-                <div className="sp-input-tag">+ Add collections</div>
+                <div className="sp-collection-list">
+                  {ALL_COLLECTIONS.map(c => (
+                    <label key={c} className={`sp-col-item ${collections.includes(c) ? 'selected' : ''}`}>
+                      <input type="checkbox" checked={collections.includes(c)} onChange={() => toggleCollection(c)} />
+                      {c}
+                    </label>
+                  ))}
+                </div>
               </div>
               <div className="sp-form-group" style={{marginTop: '1rem'}}>
                 <label>Tags</label>
-                <div className="sp-input-tag">+ Add tags</div>
+                <div className="sp-tags-wrap">
+                  {tags.map(t => (
+                    <span key={t} className="sp-tag-chip">
+                      {t}
+                      <button onClick={() => removeTag(t)}>×</button>
+                    </span>
+                  ))}
+                  <input
+                    className="sp-tag-input"
+                    placeholder="Type tag & press Enter..."
+                    value={tagInput}
+                    onChange={e => setTagInput(e.target.value)}
+                    onKeyDown={addTag}
+                  />
+                </div>
               </div>
             </div>
 
