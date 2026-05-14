@@ -1099,7 +1099,7 @@ const AdminDashboard = () => {
   };
 
   const navItems = [
-    { id: 'home', label: 'Dashboard', icon: <HomeIcon size={17} /> },
+    { id: 'home', label: 'Store Overview', icon: <HomeIcon size={17} /> },
     { id: 'orders', label: 'Orders', icon: <Inbox size={17} />, badge: orders.filter(o => o.status === 'pending').length },
     { id: 'products', label: 'Products', icon: <Tag size={17} />, badge: products.length },
     { id: 'collections', label: 'Collections', icon: <BarChart3 size={17} /> },
