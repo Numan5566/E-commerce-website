@@ -1,298 +1,273 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Plus, ArrowLeft, Lock, ExternalLink,
-  TrendingUp, BarChart3, Eye,
-  Activity, FileText, Layers, Settings, Search, Package, X
+  Plus, LayoutDashboard, ShoppingCart, 
+  Package, Users, Settings, LogOut,
+  TrendingUp, MapPin, DollarSign, 
+  Search, Filter, MoreVertical,
+  CheckCircle, Clock, AlertCircle,
+  BarChart3, Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useShop } from '../context/ShopContext';
 import './Admin.css';
 
-const StatCard = ({ icon, label, value, sub, color }) => (
-  <div className="stat-card">
-    <div className="stat-card-icon" style={{ background: color }}>{icon}</div>
-    <div className="stat-card-body">
-      <div className="stat-card-label">{label}</div>
-      <div className="stat-card-value">{value}</div>
-      {sub && <div className="stat-card-sub">{sub}</div>}
-    </div>
-  </div>
-);
-
-const AdminDashboard = () => {
+const Admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('admin_auth') === 'true');
   const [passInput, setPassInput] = useState('');
-  const [adminPassword, setAdminPassword] = useState(localStorage.getItem('admin_password') || 'admin123');
-  const [loginStep, setLoginStep] = useState('login');
-  const [forgotEmail, setForgotEmail] = useState('');
-  const [otpInput, setOtpInput] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState(null);
-  const [newPassForm, setNewPassForm] = useState({ p1: '', p2: '' });
-  const [activeTab, setActiveTab] = useState('settings');
-  const [isSending, setIsSending] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const { products, formatPrice, deleteProduct, updateProduct, addCustomProduct } = useShop();
+
+  // Mock Orders for UAE Market
+  const [orders] = useState([
+    { id: '#UAE-9021', customer: 'Ahmed Al-Maktoum', city: 'Dubai', total: 1250, status: 'Delivered', date: '2026-05-14' },
+    { id: '#UAE-9022', customer: 'Sarah Rashid', city: 'Abu Dhabi', total: 850, status: 'Processing', date: '2026-05-14' },
+    { id: '#UAE-9023', customer: 'Omar J.', city: 'Sharjah', total: 3200, status: 'Shipped', date: '2026-05-13' },
+    { id: '#UAE-9024', customer: 'Fatima H.', city: 'Dubai', total: 450, status: 'Delivered', date: '2026-05-13' },
+  ]);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (passInput === adminPassword) { 
-      setIsLoggedIn(true); 
-      localStorage.setItem('admin_auth', 'true'); 
-    } else alert('Incorrect password.');
+    if (passInput === 'admin123') {
+      setIsLoggedIn(true);
+      localStorage.setItem('admin_auth', 'true');
+    } else alert('Access Denied');
   };
 
-  const sendOtpEmail = async () => {
-    if (!forgotEmail.includes('@')) return alert('Please enter a valid email');
-    
-    setIsSending(true);
-    // Generate a random 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedOtp(otp);
-
-    console.log("OTP Generated:", otp); // For debugging
-
-    try {
-      /* 
-         NOTE: To send real emails, you need to sign up for EmailJS (free) 
-         and add your Service ID, Template ID, and Public Key here.
-      */
-      alert(`OTP Sent to ${forgotEmail}! (Mock Code: ${otp})`);
-      setLoginStep('otp');
-    } catch (error) {
-      alert("Failed to send email. Please try again.");
-    } finally {
-      setIsSending(false);
-    }
-  };
-
-  const verifyOtp = () => {
-    if (otpInput === generatedOtp) {
-      setLoginStep('reset');
-    } else {
-      alert("Invalid OTP. Please check your email.");
-    }
-  };
-
-  const handleResetPassword = (e) => {
-    e.preventDefault();
-    if (newPassForm.p1 !== newPassForm.p2) return alert('Passwords do not match');
-    if (newPassForm.p1.length < 6) return alert('Password must be at least 6 characters');
-    
-    setAdminPassword(newPassForm.p1);
-    localStorage.setItem('admin_password', newPassForm.p1);
-    alert('Password updated successfully! Please login with your new password.');
-    setLoginStep('login');
-    setPassInput('');
-    setOtpInput('');
-    setGeneratedOtp(null);
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('admin_auth');
   };
 
   if (!isLoggedIn) return (
-    <div className="admin-login-page">
-      <motion.div className="admin-login-card" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="admin-login-logo">
-          <div className="admin-logo-icon">L</div>
-          <h1>Lumina HQ</h1>
-          <p>{loginStep === 'login' ? 'Admin Control Panel' : 'Account Recovery'}</p>
+    <div className="admin-login-v3">
+      <motion.div className="login-card-v3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+        <div className="login-header-v3">
+          <div className="login-logo-v3">L</div>
+          <h1>Lumina UAE Admin</h1>
+          <p>Secure Enterprise Portal</p>
         </div>
-        
-        {loginStep === 'login' && (
-          <form onSubmit={handleLogin} className="admin-login-form">
-            <div className="sp-form-group">
-              <label>Password</label>
-              <input type="password" value={passInput} onChange={e => setPassInput(e.target.value)} placeholder="Enter password..." autoFocus className="sp-input" />
-            </div>
-            <div style={{textAlign: 'right', marginBottom: '1.5rem'}}>
-              <span style={{color: '#7c6af7', fontSize: '0.85rem', cursor: 'pointer'}} onClick={() => setLoginStep('forgot')}>Forgot password?</span>
-            </div>
-            <button type="submit" className="btn-save" style={{ width: '100%', justifyContent: 'center' }}><Lock size={16} /> Access Panel</button>
-          </form>
-        )}
-
-        {loginStep === 'forgot' && (
-          <div className="admin-login-form">
-            <div className="sp-form-group">
-               <label>Admin Email</label>
-               <input className="sp-input" type="email" placeholder="e.g. admin@example.com" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} />
-            </div>
-            <button className="btn-save" style={{width: '100%', marginTop: '1rem'}} onClick={sendOtpEmail} disabled={isSending}>
-              {isSending ? 'Sending...' : 'Send Recovery Code'}
-            </button>
-            <button className="btn-ghost-sm" style={{width: '100%', marginTop: '0.8rem', border: 'none'}} onClick={() => setLoginStep('login')}>Back to Login</button>
+        <form onSubmit={handleLogin}>
+          <div className="input-group-v3">
+            <label>Master Password</label>
+            <input type="password" placeholder="••••••••" value={passInput} onChange={e => setPassInput(e.target.value)} autoFocus />
           </div>
-        )}
-
-        {loginStep === 'otp' && (
-          <div className="admin-login-form">
-            <div className="sp-form-group">
-              <label>Enter 6-Digit Code</label>
-              <input className="sp-input" placeholder="000000" value={otpInput} onChange={e => setOtpInput(e.target.value)} maxLength={6} />
-            </div>
-            <p style={{fontSize: '0.75rem', color: '#666', marginTop: '-0.5rem', marginBottom: '1rem'}}>Please check your inbox (and spam folder).</p>
-            <button className="btn-save" style={{width: '100%'}} onClick={verifyOtp}>Verify Code</button>
-            <button className="btn-ghost-sm" style={{width: '100%', marginTop: '0.8rem', border: 'none'}} onClick={() => setLoginStep('forgot')}>Resend Code</button>
-          </div>
-        )}
-
-        {loginStep === 'reset' && (
-          <form onSubmit={handleResetPassword} className="admin-login-form">
-            <div className="sp-form-group">
-              <label>New Secure Password</label>
-              <input type="password" className="sp-input" placeholder="Min 6 characters" value={newPassForm.p1} onChange={e => setNewPassForm({...newPassForm, p1: e.target.value})} />
-            </div>
-            <div className="sp-form-group">
-              <label>Confirm Password</label>
-              <input type="password" className="sp-input" placeholder="Repeat password" value={newPassForm.p2} onChange={e => setNewPassForm({...newPassForm, p2: e.target.value})} />
-            </div>
-            <button type="submit" className="btn-save" style={{width: '100%', marginTop: '1.5rem'}}>Reset & Login</button>
-          </form>
-        )}
+          <button type="submit" className="login-btn-v3">Authenticate Access</button>
+        </form>
       </motion.div>
     </div>
   );
 
-
-  const renderSettings = () => {
-    const [settForm, setSettForm] = useState({ old: '', n1: '', n2: '' });
-    const [showSecret, setShowSecret] = useState(false);
-    const [copied, setCopied] = useState('');
-
-    const handleUpdate = (e) => {
-      e.preventDefault();
-      if (settForm.old !== adminPassword) return alert('Current password incorrect');
-      if (settForm.n1 !== settForm.n2) return alert('New passwords do not match');
-      setAdminPassword(settForm.n1);
-      localStorage.setItem('admin_password', settForm.n1);
-      alert('Password updated successfully!');
-      setSettForm({ old: '', n1: '', n2: '' });
-    };
-
-    const copyToClipboard = (text, key) => {
-      navigator.clipboard.writeText(text);
-      setCopied(key);
-      setTimeout(() => setCopied(''), 2000);
-    };
-
-    return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="settings-content">
-        <div className="page-header-group"><h1>Settings</h1></div>
-        <div className="settings-grid">
-          <div className="settings-main-col">
-            <div className="sp-card dev-card">
-              <div className="sp-card-header"><h3>Credentials</h3><a href="#" className="docs-link">Docs <ExternalLink size={14} /></a></div>
-              <div className="dev-field">
-                <label>Client ID</label>
-                <div className="dev-input-group">
-                  <input readOnly value="95078e37c1eb69f001212ec2f412a4b6" />
-                  <button className="dev-icon-btn" onClick={() => copyToClipboard('95078e37c1eb69f001212ec2f412a4b6', 'client')}>
-                    {copied === 'client' ? <span className="copied-text">Copied!</span> : <Package size={16} />}
-                  </button>
-                </div>
-              </div>
-              <div className="dev-field" style={{marginTop: '1.5rem'}}>
-                <label>Secret</label>
-                <div className="dev-input-group">
-                  <input type={showSecret ? 'text' : 'password'} readOnly value="********************************" />
-                  <button className="dev-icon-btn" onClick={() => setShowSecret(!showSecret)}><Eye size={16} /></button>
-                  <button className="dev-icon-btn" onClick={() => copyToClipboard('********************************', 'secret')}>
-                    {copied === 'secret' ? <span className="copied-text">Copied!</span> : <Package size={16} />}
-                  </button>
-                  <button className="dev-btn-danger">Rotate</button>
-                </div>
-              </div>
-            </div>
-            <div className="sp-card dev-card"><h3>App automation token</h3><p className="dev-desc">Enable continuous integration and deployment.</p><button className="sp-btn-discard">Create token</button></div>
-            <div className="sp-card dev-card"><h3>Contact information</h3><div className="dev-field"><label>API email</label><input readOnly value="luminaminimal@gmail.com" className="sp-input" /></div></div>
-            <div className="sp-card dev-card"><h3>Google Cloud Pub/Sub</h3><p className="dev-desc">Recommended for high volume webhooks.</p><input readOnly value="delivery@shopify-pubsub-webhooks.iam.gserviceaccount.com" className="sp-input" /></div>
-            <div className="sp-card dev-card"><h3>App icon</h3><div className="dev-upload-section"><div className="dev-upload-box"><Plus size={20} /></div><button className="sp-btn-discard" style={{marginLeft: 'auto'}}>Upload icon</button></div></div>
-          </div>
-          <div className="settings-side-col">
-            <div className="sp-card">
-              <h3>Change Password</h3>
-              <form onSubmit={handleUpdate} className="admin-login-form">
-                <div className="sp-form-group"><label>Current</label><input type="password" className="sp-input" value={settForm.old} onChange={e => setSettForm({...settForm, old: e.target.value})} /></div>
-                <div className="sp-form-group" style={{marginTop: '1rem'}}><label>New</label><input type="password" className="sp-input" value={settForm.n1} onChange={e => setSettForm({...settForm, n1: e.target.value})} /></div>
-                <button type="submit" className="btn-save" style={{marginTop: '1.5rem', width: '100%'}}>Update</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
-
-  const renderLogs = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <div className="page-header-group"><h1>Logs</h1></div>
-      <div className="sp-card" style={{padding: 0}}>
-         <table className="admin-table">
-            <thead><tr><th>Timestamp</th><th>Level</th><th>Message</th></tr></thead>
-            <tbody>
-               <tr><td className="text-muted">2026-05-14 20:50:12</td><td><span className="sp-badge active">INFO</span></td><td>System ready</td></tr>
-            </tbody>
-         </table>
-      </div>
-    </motion.div>
-  );
-
-  const renderMonitoring = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <div className="page-header-group"><h1>Monitoring</h1></div>
-      <div className="stats-grid">
-         <StatCard icon={<TrendingUp size={20}/>} label="Uptime" value="99.99%" color="rgba(72,187,120,0.15)" />
-         <StatCard icon={<BarChart3 size={20}/>} label="Requests" value="1.2k" color="rgba(124,106,247,0.15)" />
-      </div>
-    </motion.div>
-  );
-
-  const renderVersions = () => (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <div className="page-header-group"><h1>Versions</h1></div>
-      <div className="sp-card">
-         <div style={{display: 'flex', justifyContent: 'space-between', padding: '1rem 0'}}>
-            <div><div className="fw-bold">v2.4.0</div><div className="text-muted">Current</div></div>
-            <span className="sp-badge active">Active</span>
-         </div>
-      </div>
-    </motion.div>
-  );
-
-  const getContent = () => {
-    switch (activeTab) {
-      case 'monitoring': return renderMonitoring();
-      case 'logs': return renderLogs();
-      case 'versions': return renderVersions();
-      case 'settings': return renderSettings();
-      default: return renderSettings();
-    }
-  };
-
-  const navItems = [
-    { id: 'monitoring', label: 'Monitoring', icon: <Activity size={17} /> },
-    { id: 'logs', label: 'Logs', icon: <FileText size={17} /> },
-    { id: 'versions', label: 'Versions', icon: <Layers size={17} /> },
-    { id: 'settings', label: 'Settings', icon: <Settings size={17} /> },
-  ];
-
   return (
-    <div className="admin-layout">
-      <div className="admin-sidebar">
-        <div className="sidebar-brand">
-          <div className="sidebar-logo">L</div>
-          <div><div className="sidebar-brand-name">Lumina HQ</div><div className="sidebar-plan">Admin Panel</div></div>
+    <div className="admin-root-v3">
+      {/* ─── SIDEBAR ─── */}
+      <aside className="admin-sidebar-v3">
+        <div className="sidebar-head-v3">
+          <div className="sidebar-logo-v3">L</div>
+          <div>
+            <h3>Lumina HQ</h3>
+            <span>UAE Division</span>
+          </div>
         </div>
-        <div className="sidebar-search"><Search size={14} /><span>Search</span></div>
-        <nav className="sidebar-nav">
-          {navItems.map(item => (
-            <button key={item.id} className={`nav-item ${activeTab === item.id ? 'active' : ''}`} onClick={() => setActiveTab(item.id)}>
-              {item.icon}<span>{item.label}</span>
-            </button>
-          ))}
+
+        <nav className="sidebar-nav-v3">
+          <button className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => setActiveTab('dashboard')}>
+            <LayoutDashboard size={18} /> Dashboard
+          </button>
+          <button className={activeTab === 'orders' ? 'active' : ''} onClick={() => setActiveTab('orders')}>
+            <ShoppingCart size={18} /> Orders
+          </button>
+          <button className={activeTab === 'products' ? 'active' : ''} onClick={() => setActiveTab('products')}>
+            <Package size={18} /> Inventory
+          </button>
+          <button className={activeTab === 'customers' ? 'active' : ''} onClick={() => setActiveTab('customers')}>
+            <Users size={18} /> Customers
+          </button>
+          <button className={activeTab === 'analytics' ? 'active' : ''} onClick={() => setActiveTab('analytics')}>
+            <BarChart3 size={18} /> Analytics
+          </button>
         </nav>
-        <div className="sidebar-footer">
-          <button className="nav-item logout-btn" onClick={() => { localStorage.removeItem('admin_auth'); setIsLoggedIn(false); }}><Lock size={16} /> Logout</button>
+
+        <div className="sidebar-foot-v3">
+          <button onClick={handleLogout} className="logout-btn-v3">
+            <LogOut size={18} /> Logout
+          </button>
         </div>
-      </div>
-      <div className="admin-main"><AnimatePresence mode="wait">{getContent()}</AnimatePresence></div>
+      </aside>
+
+      {/* ─── MAIN CONTENT ─── */}
+      <main className="admin-main-v3">
+        <header className="main-header-v3">
+          <div className="header-search-v3">
+            <Search size={18} />
+            <input type="text" placeholder="Search orders, products, customers..." />
+          </div>
+          <div className="header-actions-v3">
+             <div className="region-badge-v3"><Globe size={14}/> UAE MARKET LIVE</div>
+             <div className="admin-user-v3">Admin User</div>
+          </div>
+        </header>
+
+        <div className="admin-content-v3">
+          {activeTab === 'dashboard' && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="stats-grid-v3">
+                <div className="stat-v3">
+                  <div className="stat-icon-v3" style={{ background: 'rgba(212,175,55,0.1)', color: '#d4af37' }}><TrendingUp size={24}/></div>
+                  <div className="stat-info-v3">
+                    <label>Daily Sales</label>
+                    <h3>{formatPrice(12450)}</h3>
+                    <span className="trend-up">+12.5% from yesterday</span>
+                  </div>
+                </div>
+                <div className="stat-v3">
+                  <div className="stat-icon-v3" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981' }}><ShoppingCart size={24}/></div>
+                  <div className="stat-info-v3">
+                    <label>Active Orders</label>
+                    <h3>18</h3>
+                    <span className="trend-up">4 pending Dubai</span>
+                  </div>
+                </div>
+                <div className="stat-v3">
+                  <div className="stat-icon-v3" style={{ background: 'rgba(59,130,246,0.1)', color: '#3b82f6' }}><Package size={24}/></div>
+                  <div className="stat-info-v3">
+                    <label>In Stock</label>
+                    <h3>142</h3>
+                    <span>Across 8 categories</span>
+                  </div>
+                </div>
+                <div className="stat-v3">
+                  <div className="stat-icon-v3" style={{ background: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}><MapPin size={24}/></div>
+                  <div className="stat-info-v3">
+                    <label>Top Region</label>
+                    <h3>Dubai</h3>
+                    <span>65% of total sales</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="dashboard-grid-v3">
+                <div className="card-v3 orders-card">
+                  <div className="card-header-v3">
+                    <h3>Recent UAE Orders</h3>
+                    <button className="btn-v3">View All</button>
+                  </div>
+                  <table className="table-v3">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Location</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map(order => (
+                        <tr key={order.id}>
+                          <td className="fw-800">{order.id}</td>
+                          <td>{order.customer}</td>
+                          <td>{order.city}</td>
+                          <td className="fw-700">{formatPrice(order.total)}</td>
+                          <td>
+                            <span className={`badge-v3 ${order.status.toLowerCase()}`}>
+                              {order.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="card-v3 inventory-summary">
+                   <div className="card-header-v3">
+                     <h3>Inventory Alerts</h3>
+                   </div>
+                   <div className="alert-list-v3">
+                     <div className="alert-item-v3">
+                       <AlertCircle size={16} color="#ef4444" />
+                       <div>
+                         <p>Lumina Air Gen 2 is Low Stock</p>
+                         <span>Only 3 units left in Dubai warehouse</span>
+                       </div>
+                     </div>
+                     <div className="alert-item-v3">
+                       <CheckCircle size={16} color="#10b981" />
+                       <div>
+                         <p>Restock Successful</p>
+                         <span>Titanium Chargers updated</span>
+                       </div>
+                     </div>
+                   </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'orders' && (
+            <div className="card-v3">
+              <div className="card-header-v3">
+                <h2>All Orders</h2>
+                <div className="table-filters">
+                   <button className="btn-outline-v3"><Filter size={14}/> Filter</button>
+                </div>
+              </div>
+              <table className="table-v3">
+                 <thead>
+                   <tr>
+                     <th>Order ID</th>
+                     <th>Date</th>
+                     <th>Customer</th>
+                     <th>City</th>
+                     <th>Amount</th>
+                     <th>Status</th>
+                     <th>Action</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   {orders.map(order => (
+                     <tr key={order.id}>
+                       <td>{order.id}</td>
+                       <td>{order.date}</td>
+                       <td>{order.customer}</td>
+                       <td>{order.city}</td>
+                       <td>{formatPrice(order.total)}</td>
+                       <td><span className={`badge-v3 ${order.status.toLowerCase()}`}>{order.status}</span></td>
+                       <td><button className="icon-btn-v3"><MoreVertical size={16}/></button></td>
+                     </tr>
+                   ))}
+                 </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'products' && (
+            <div className="card-v3">
+              <div className="card-header-v3">
+                <h2>Product Catalog</h2>
+                <button className="btn-primary-v3"><Plus size={16}/> Add New Product</button>
+              </div>
+              <div className="product-admin-grid">
+                {products.map(p => (
+                  <div key={p.id} className="product-admin-item">
+                     <img src={p.image} alt={p.name} />
+                     <div className="pai-info">
+                       <h4>{p.name}</h4>
+                       <p>{formatPrice(p.price)}</p>
+                       <div className="pai-actions">
+                         <button className="btn-sm-outline">Edit</button>
+                         <button className="btn-sm-danger" onClick={() => deleteProduct(p.id)}>Delete</button>
+                       </div>
+                     </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default Admin;
