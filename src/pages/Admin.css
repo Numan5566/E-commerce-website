@@ -1191,3 +1191,68 @@
   .form-row-2 { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* =============================================
+   SHOPIFY-STYLE PRODUCT TABLE
+============================================= */
+.sp-table-tabs {
+  display: flex;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sp-tab {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(170,170,200,0.5);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sp-tab:hover { color: #e0e0f0; }
+.sp-tab.active {
+  color: #7c6af7;
+  border-bottom-color: #7c6af7;
+}
+
+.sp-product-table th {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: rgba(170,170,200,0.6) !important;
+}
+
+.sp-prod-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sp-prod-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sp-status-badge {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+.sp-status-badge.active {
+  background: rgba(72,187,120,0.12);
+  color: #48bb78;
+  border: 1px solid rgba(72,187,120,0.2);
+}
+

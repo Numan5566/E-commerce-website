@@ -757,49 +757,72 @@ const AdminDashboard = () => {
           <button className="btn-save" onClick={openAdd}><Plus size={16} /> Add Product</button>
         </div>
 
-        {/* Search */}
-        <div className="search-bar">
-          <Search size={16} />
-          <input placeholder="Search products..." value={searchQ} onChange={e => setSearchQ(e.target.value)} />
-        </div>
+        {/* Top Actions & Tabs */}
+        <div className="sp-table-wrapper dashboard-card" style={{padding: 0}}>
+          <div className="sp-table-top-bar">
+            <div className="sp-table-tabs">
+              <button className="sp-tab active">All</button>
+              <button className="sp-tab">Active</button>
+              <button className="sp-tab">Draft</button>
+              <button className="sp-tab">Archived</button>
+            </div>
+            <div style={{padding: '0.75rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '0.75rem', alignItems: 'center'}}>
+               <div className="search-bar" style={{margin: 0, flex: 1, height: '32px', background: 'rgba(255,255,255,0.03)'}}>
+                 <Search size={14} />
+                 <input placeholder="Search products..." value={searchQ} onChange={e => setSearchQ(e.target.value)} style={{fontSize: '0.85rem'}} />
+               </div>
+               <button className="btn-ghost-sm" style={{height: '32px'}}>Export</button>
+               <button className="btn-ghost-sm" style={{height: '32px'}}>Import</button>
+               <button className="btn-ghost-sm" style={{height: '32px'}}>More actions <ChevronDown size={14}/></button>
+            </div>
+          </div>
 
-        <div className="products-admin-grid">
-          {filtered.map(p => {
-            const margin = p.buyPrice ? Math.round(((p.price - p.buyPrice) / p.price) * 100) : null;
-            return (
-              <div key={p.id} className="product-admin-card">
-                <div className="prod-card-img">
-                  {p.image ? <img src={p.image} alt={p.name} /> : <Package size={32} color="#555" />}
-                </div>
-                <div className="prod-card-body">
-                  <div className="prod-card-tag">{p.tag || p.category}</div>
-                  <div className="prod-card-name">{p.name}</div>
-                  <div className="prod-card-prices">
-                    <span className="prod-sell-price">${p.price}</span>
-                    {p.buyPrice && <span className="prod-buy-price">Cost: ${p.buyPrice}</span>}
-                    {margin && <span className="prod-margin">{margin}% margin</span>}
-                  </div>
-                  {p.stock !== undefined && (
-                    <div className="prod-stock">
-                      <div className="stock-bar-wrap">
-                        <div className="stock-bar" style={{ width: `${Math.min((p.stock / 100) * 100, 100)}%`, background: p.stock < 20 ? '#f43f5e' : '#48bb78' }} />
+          <table className="admin-table sp-product-table">
+            <thead>
+              <tr>
+                <th style={{width: '40px'}}><input type="checkbox"/></th>
+                <th>Product</th>
+                <th>Status</th>
+                <th>Inventory</th>
+                <th>Category</th>
+                <th>Product type</th>
+                <th>Vendor</th>
+                <th style={{width: '80px'}}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(p => (
+                <tr key={p.id}>
+                  <td><input type="checkbox"/></td>
+                  <td>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
+                      <div className="sp-prod-thumb">
+                        {p.image ? <img src={p.image} alt="" /> : <Package size={16}/>}
                       </div>
-                      <span>{p.stock} in stock</span>
+                      <span className="fw-bold" style={{fontSize: '0.9rem'}}>{p.name}</span>
                     </div>
-                  )}
-                  <div className="prod-card-actions">
-                    {p.supplier && (
-                      <a href={p.supplier} target="_blank" rel="noreferrer" className="btn-source" title="View Supplier">
-                        <ExternalLink size={13} /> Supplier
-                      </a>
-                    )}
-                    <button className="btn-edit-sm" onClick={() => openEdit(p)}><Edit2 size={13} /></button>
-                    <button className="btn-del-sm" onClick={() => { if(window.confirm('Delete?')) deleteProduct(p.id); }}><Trash2 size={13} /></button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                  </td>
+                  <td>
+                    <span className="sp-status-badge active">{p.status || 'Active'}</span>
+                  </td>
+                  <td>
+                    <span style={{color: (p.stock || 0) < 10 ? '#f43f5e' : '#48bb78', fontSize: '0.85rem'}}>
+                      {p.stock || 0} in stock
+                    </span>
+                  </td>
+                  <td className="text-muted" style={{fontSize: '0.85rem'}}>{p.category || 'Uncategorized'}</td>
+                  <td className="text-muted" style={{fontSize: '0.85rem'}}>{p.type || '--'}</td>
+                  <td className="text-muted" style={{fontSize: '0.85rem'}}>{p.vendor || '--'}</td>
+                  <td>
+                    <div style={{display: 'flex', gap: '0.4rem'}}>
+                      <button className="btn-edit-sm" onClick={() => openEdit(p)}><Edit2 size={13}/></button>
+                      <button className="btn-del-sm" onClick={() => { if(window.confirm('Delete?')) deleteProduct(p.id); }}><Trash2 size={13}/></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </motion.div>
     );
