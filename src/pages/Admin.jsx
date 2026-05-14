@@ -787,8 +787,13 @@ const AdminDashboard = () => {
   const renderProducts = () => {
     let filtered = products.filter(p => p.name?.toLowerCase().includes(searchQ.toLowerCase()));
     
-    if (productTab === 'Active') filtered = filtered.filter(p => p.status === 'Active');
-    if (productTab === 'Draft') filtered = filtered.filter(p => p.status === 'Draft');
+    if (productTab === 'Active') {
+      filtered = filtered.filter(p => !p.status || p.status === 'Active');
+    } else if (productTab === 'Draft') {
+      filtered = filtered.filter(p => p.status === 'Draft');
+    } else if (productTab === 'Archived') {
+      filtered = filtered.filter(p => p.status === 'Archived');
+    }
 
     const toggleSelectAll = () => {
       if (selectedIds.length === filtered.length) setSelectedIds([]);
