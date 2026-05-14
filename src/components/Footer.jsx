@@ -6,6 +6,7 @@ import {
   ShieldCheck, Globe, CreditCard
 } from 'lucide-react';
 
+/* FORCE_REDEPLOY_MARKER: 2026-05-15_01:10 */
 import './Footer.css';
 
 const Footer = () => {
@@ -26,7 +27,6 @@ const Footer = () => {
               <a href="#"><Twitter size={18} /></a>
               <a href="#"><Globe size={18} /></a>
             </div>
-
           </div>
 
           {/* Links Grid */}
