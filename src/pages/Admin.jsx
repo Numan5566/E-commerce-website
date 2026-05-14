@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
 import Home from './Home';
@@ -65,6 +65,26 @@ const ProductModal = ({ product, onSave, onClose }) => {
     comparePrice: '', status: 'Active', vendor: 'None', type: 'None'
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const fileInputRef = useRef(null);
+  const [dragging, setDragging] = useState(false);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => set('image', ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => set('image', ev.target.result);
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -113,14 +133,52 @@ const ProductModal = ({ product, onSave, onClose }) => {
             {/* Media */}
             <div className="sp-card">
               <h3>Media</h3>
-              <div className="sp-upload-zone">
-                <div className="sp-upload-content">
-                   <button className="sp-upload-btn">Upload new</button>
-                   <span className="sp-upload-text">Select existing</span>
-                </div>
-                <p className="sp-upload-hint">Accepts images, videos, or 3D models</p>
-                {form.image && <div style={{marginTop:'1rem'}}><img src={form.image} height="80" alt="preview"/></div>}
-                <input type="text" style={{marginTop:'1rem'}} placeholder="Or enter image URL..." value={form.image} onChange={e => set('image', e.target.value)} className="sp-input"/>
+              {/* Hidden real file input */}
+              <input
+                type="file"
+                accept="image/*,video/*"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+              <div
+                className={`sp-upload-zone ${dragging ? 'sp-dragging' : ''}`}
+                onDragOver={e => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={handleDrop}
+                onClick={() => !form.image && fileInputRef.current.click()}
+                style={{ cursor: form.image ? 'default' : 'pointer' }}
+              >
+                {form.image ? (
+                  <div className="sp-img-preview">
+                    <img src={form.image} alt="Preview" />
+                    <div className="sp-img-actions">
+                      <button className="sp-upload-btn" onClick={e => { e.stopPropagation(); fileInputRef.current.click(); }}>Replace image</button>
+                      <button className="sp-remove-btn" onClick={e => { e.stopPropagation(); set('image', ''); }}>Remove</button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="sp-upload-icon">🖼️</div>
+                    <div className="sp-upload-content">
+                      <button className="sp-upload-btn" onClick={e => { e.stopPropagation(); fileInputRef.current.click(); }}>Upload new</button>
+                      <span className="sp-upload-text" onClick={e => { e.stopPropagation(); fileInputRef.current.click(); }}>Select from files</span>
+                    </div>
+                    <p className="sp-upload-hint">Drag &amp; drop or click to upload. Accepts images, videos</p>
+                  </>
+                )}
+              </div>
+              {/* Optional URL fallback */}
+              <div style={{marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                <span style={{fontSize: '0.8rem', color: '#6d7175', whiteSpace: 'nowrap'}}>Or paste URL:</span>
+                <input
+                  type="text"
+                  placeholder="https://images.unsplash.com/..."
+                  value={form.image && form.image.startsWith('http') ? form.image : ''}
+                  onChange={e => set('image', e.target.value)}
+                  className="sp-input"
+                  style={{flex: 1}}
+                />
               </div>
             </div>
 

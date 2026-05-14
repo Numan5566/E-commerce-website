@@ -820,11 +820,57 @@
 .sp-rte textarea:focus { outline: none; }
 
 .sp-upload-zone {
-  border: 1px dashed #c9cccf;
+  border: 2px dashed #c9cccf;
   border-radius: 8px;
   padding: 2rem 1rem;
   text-align: center;
   background: #fafbfb;
+  transition: all 0.2s;
+}
+.sp-upload-zone:hover {
+  border-color: #008060;
+  background: #f0f9f6;
+}
+.sp-dragging {
+  border-color: #008060 !important;
+  background: #e6f4f1 !important;
+  transform: scale(1.01);
+}
+.sp-upload-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+.sp-img-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.sp-img-preview img {
+  max-height: 200px;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid #e1e3e5;
+  object-fit: contain;
+}
+.sp-img-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.sp-remove-btn {
+  background: none;
+  border: 1px solid #c9cccf;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #d72c0d;
+  transition: all 0.2s;
+}
+.sp-remove-btn:hover {
+  background: #fff4f4;
+  border-color: #d72c0d;
 }
 .sp-upload-content {
   display: flex;
