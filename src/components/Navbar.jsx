@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, ShoppingBag, Globe, Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Search, ShoppingBag, Globe, Menu, X, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useShop, regions } from '../context/ShopContext';
+import { useShop } from '../context/ShopContext';
+
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
@@ -11,8 +12,9 @@ const announcements = [
   "NEW SEASON DROP: EXPLORE THE FUTURE OF LIVING",
   "JOIN OUR COMMUNITY FOR 20% OFF YOUR FIRST ORDER"
 ];
-const Navbar = () => {
+const Navbar = ({ onCartOpen }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isRegionOpen, setIsRegionOpen] = useState(false);
   const { cartCount, region, setRegion, regions } = useShop();
@@ -74,10 +76,11 @@ const Navbar = () => {
             <button className="nav-action-btn-v3"><Search size={18} /></button>
             <Link to="/admin" className="nav-action-btn-v3"><User size={18} /></Link>
             
-            <Link to="/cart" className="nav-action-btn-v3">
+            <button className="nav-action-btn-v3" onClick={onCartOpen}>
               <ShoppingBag size={18} />
               {cartCount > 0 && <span className="cart-dot-v3">{cartCount}</span>}
-            </Link>
+            </button>
+
 
             <button className="mobile-toggle nav-action-btn-v3" onClick={() => setMobileMenuOpen(true)}>
               <Menu size={22} />
