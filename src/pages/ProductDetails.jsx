@@ -148,7 +148,7 @@ const ProductDetails = () => {
                🔥 <strong>{liveViewers} people</strong> are viewing this right now
             </div>
             <div className="stock-alert">
-               <div className="stock-dot pulse"></div>
+               <div className="stock-dot pdp-pulse"></div>
                Only <strong>{product.stock || 7} items</strong> left in stock - order soon
             </div>
             <div className="countdown-timer">
