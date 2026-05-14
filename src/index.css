@@ -1,12 +1,11 @@
 :root {
-  --gold: #d4af37;
-  --gold-dark: #b8860b;
-  --black: #000000;
-  --dark-gray: #0a0a0a;
-  --light-gray: #1a1a1a;
-  --text: #ffffff;
-  --text-muted: #888888;
-  --font-en: 'Outfit', sans-serif;
+  --bg-main: #FFFFFF;
+  --bg-secondary: #F4F4F4;
+  --text-primary: #000000;
+  --text-muted: #666666;
+  --accent-gold: #D4AF37;
+  --accent-green: #10B981;
+  --font-main: 'Outfit', sans-serif;
   --font-ar: 'Noto Sans Arabic', sans-serif;
 }
 
@@ -17,77 +16,76 @@
 }
 
 body {
-  background-color: var(--black);
-  color: var(--text);
-  font-family: var(--font-en);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  line-height: 1.6;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 40px;
 }
 
-/* ─── LUXURY BUTTONS ─── */
-.btn-gold {
-  background: var(--gold);
-  color: black;
-  padding: 12px 30px;
-  border-radius: 4px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.3s;
+/* ─── MINIMALIST BUTTONS ─── */
+.btn-black {
+  background: var(--text-primary);
+  color: #fff;
+  padding: 14px 40px;
   border: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-gold:hover {
-  background: white;
-  transform: translateY(-2px);
-}
-
-.btn-outline {
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  padding: 12px 30px;
-  border-radius: 4px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
-  background: transparent;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
 }
 
-.btn-outline:hover {
-  background: var(--gold);
-  color: black;
+.btn-black:hover {
+  background: #333;
+}
+
+.btn-outline-black {
+  border: 1px solid var(--text-primary);
+  background: transparent;
+  color: var(--text-primary);
+  padding: 14px 40px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-outline-black:hover {
+  background: var(--text-primary);
+  color: #fff;
 }
 
 /* ─── TYPOGRAPHY ─── */
-h1, h2, h3 {
+h1, h2, h3, h4 {
   font-weight: 800;
-  letter-spacing: -1px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .arabic {
   font-family: var(--font-ar);
-  direction: rtl;
 }
 
-/* ─── GLASS EFFECTS ─── */
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* ─── PRODUCT BADGES ─── */
+.badge-new {
+  background: #000;
+  color: #fff;
+  padding: 4px 12px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 /* ─── SCROLLBAR ─── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #000; }
-::-webkit-scrollbar-thumb { background: var(--gold); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #fff; }
+::-webkit-scrollbar-thumb { background: #000; }
