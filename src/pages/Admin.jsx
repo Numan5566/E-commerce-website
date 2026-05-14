@@ -25,8 +25,10 @@ const AdminDashboard = () => {
   const [loginStep, setLoginStep] = useState('login');
   const [forgotEmail, setForgotEmail] = useState('');
   const [otpInput, setOtpInput] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState(null);
   const [newPassForm, setNewPassForm] = useState({ p1: '', p2: '' });
   const [activeTab, setActiveTab] = useState('settings');
+  const [isSending, setIsSending] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -36,14 +38,50 @@ const AdminDashboard = () => {
     } else alert('Incorrect password.');
   };
 
+  const sendOtpEmail = async () => {
+    if (!forgotEmail.includes('@')) return alert('Please enter a valid email');
+    
+    setIsSending(true);
+    // Generate a random 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(otp);
+
+    console.log("OTP Generated:", otp); // For debugging
+
+    try {
+      /* 
+         NOTE: To send real emails, you need to sign up for EmailJS (free) 
+         and add your Service ID, Template ID, and Public Key here.
+      */
+      alert(`OTP Sent to ${forgotEmail}! (Mock Code: ${otp})`);
+      setLoginStep('otp');
+    } catch (error) {
+      alert("Failed to send email. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const verifyOtp = () => {
+    if (otpInput === generatedOtp) {
+      setLoginStep('reset');
+    } else {
+      alert("Invalid OTP. Please check your email.");
+    }
+  };
+
   const handleResetPassword = (e) => {
     e.preventDefault();
     if (newPassForm.p1 !== newPassForm.p2) return alert('Passwords do not match');
+    if (newPassForm.p1.length < 6) return alert('Password must be at least 6 characters');
+    
     setAdminPassword(newPassForm.p1);
     localStorage.setItem('admin_password', newPassForm.p1);
-    alert('Password updated successfully! Please login.');
+    alert('Password updated successfully! Please login with your new password.');
     setLoginStep('login');
     setPassInput('');
+    setOtpInput('');
+    setGeneratedOtp(null);
   };
 
   if (!isLoggedIn) return (
@@ -54,6 +92,7 @@ const AdminDashboard = () => {
           <h1>Lumina HQ</h1>
           <p>{loginStep === 'login' ? 'Admin Control Panel' : 'Account Recovery'}</p>
         </div>
+        
         {loginStep === 'login' && (
           <form onSubmit={handleLogin} className="admin-login-form">
             <div className="sp-form-group">
@@ -66,31 +105,49 @@ const AdminDashboard = () => {
             <button type="submit" className="btn-save" style={{ width: '100%', justifyContent: 'center' }}><Lock size={16} /> Access Panel</button>
           </form>
         )}
+
         {loginStep === 'forgot' && (
           <div className="admin-login-form">
             <div className="sp-form-group">
-               <label>Email</label>
-               <input className="sp-input" placeholder="e.g. admin@example.com" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} />
+               <label>Admin Email</label>
+               <input className="sp-input" type="email" placeholder="e.g. admin@example.com" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} />
             </div>
-            <button className="btn-save" style={{width: '100%', marginTop: '1rem'}} onClick={() => setLoginStep('otp')}>Send Code</button>
-            <button className="btn-ghost-sm" style={{width: '100%', marginTop: '0.8rem', border: 'none'}} onClick={() => setLoginStep('login')}>Back</button>
+            <button className="btn-save" style={{width: '100%', marginTop: '1rem'}} onClick={sendOtpEmail} disabled={isSending}>
+              {isSending ? 'Sending...' : 'Send Recovery Code'}
+            </button>
+            <button className="btn-ghost-sm" style={{width: '100%', marginTop: '0.8rem', border: 'none'}} onClick={() => setLoginStep('login')}>Back to Login</button>
           </div>
         )}
+
         {loginStep === 'otp' && (
           <div className="admin-login-form">
-            <div className="sp-form-group"><label>OTP (Try 123456)</label><input className="sp-input" value={otpInput} onChange={e => setOtpInput(e.target.value)} /></div>
-            <button className="btn-save" style={{width: '100%', marginTop: '1rem'}} onClick={() => setLoginStep('reset')}>Verify</button>
+            <div className="sp-form-group">
+              <label>Enter 6-Digit Code</label>
+              <input className="sp-input" placeholder="000000" value={otpInput} onChange={e => setOtpInput(e.target.value)} maxLength={6} />
+            </div>
+            <p style={{fontSize: '0.75rem', color: '#666', marginTop: '-0.5rem', marginBottom: '1rem'}}>Please check your inbox (and spam folder).</p>
+            <button className="btn-save" style={{width: '100%'}} onClick={verifyOtp}>Verify Code</button>
+            <button className="btn-ghost-sm" style={{width: '100%', marginTop: '0.8rem', border: 'none'}} onClick={() => setLoginStep('forgot')}>Resend Code</button>
           </div>
         )}
+
         {loginStep === 'reset' && (
           <form onSubmit={handleResetPassword} className="admin-login-form">
-            <div className="sp-form-group"><label>New Password</label><input type="password" className="sp-input" value={newPassForm.p1} onChange={e => setNewPassForm({...newPassForm, p1: e.target.value})} /></div>
-            <button type="submit" className="btn-save" style={{width: '100%', marginTop: '1.5rem'}}>Update</button>
+            <div className="sp-form-group">
+              <label>New Secure Password</label>
+              <input type="password" className="sp-input" placeholder="Min 6 characters" value={newPassForm.p1} onChange={e => setNewPassForm({...newPassForm, p1: e.target.value})} />
+            </div>
+            <div className="sp-form-group">
+              <label>Confirm Password</label>
+              <input type="password" className="sp-input" placeholder="Repeat password" value={newPassForm.p2} onChange={e => setNewPassForm({...newPassForm, p2: e.target.value})} />
+            </div>
+            <button type="submit" className="btn-save" style={{width: '100%', marginTop: '1.5rem'}}>Reset & Login</button>
           </form>
         )}
       </motion.div>
     </div>
   );
+
 
   const renderSettings = () => {
     const [settForm, setSettForm] = useState({ old: '', n1: '', n2: '' });
