@@ -73,6 +73,9 @@ const ProductModal = ({ product, onSave, onClose }) => {
   const [customVendor, setCustomVendor] = useState('');
   const [variants, setVariants] = useState(product?.variants || []);
   const [newVariantName, setNewVariantName] = useState('');
+  const [colors, setColors] = useState(product?.colors || []);
+  const [newColorName, setNewColorName] = useState('');
+  const [newColorHex, setNewColorHex] = useState('#000000');
 
   const ALL_COLLECTIONS = ['New Arrivals', 'Best Sellers', 'Trending Tech', 'Chargers & Gadgets', 'Home Essentials', 'Viral Products'];
 
@@ -112,6 +115,16 @@ const ProductModal = ({ product, onSave, onClose }) => {
     setVariants(updated);
   };
 
+  const addColor = () => {
+    if (!newColorName) return;
+    setColors([...colors, { name: newColorName, hex: newColorHex }]);
+    setNewColorName('');
+  };
+
+  const removeColor = (index) => {
+    setColors(colors.filter((_, i) => i !== index));
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -140,6 +153,7 @@ const ProductModal = ({ product, onSave, onClose }) => {
       tags,
       collections,
       variants,
+      colors,
       vendor: form.vendor === '__custom__' ? customVendor : form.vendor
     });
   };
@@ -335,7 +349,7 @@ const ProductModal = ({ product, onSave, onClose }) => {
             {/* Variants */}
             <div className="sp-card">
               <div className="sp-card-header">
-                <h3>Variants</h3>
+                <h3>Variants (Size, Material, etc.)</h3>
               </div>
               
               {variants.map((v, vIndex) => (
@@ -353,7 +367,7 @@ const ProductModal = ({ product, onSave, onClose }) => {
                     ))}
                     <input 
                       className="sp-tag-input" 
-                      placeholder="Add value (e.g. Red)..." 
+                      placeholder="Add value..." 
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
@@ -376,7 +390,37 @@ const ProductModal = ({ product, onSave, onClose }) => {
                   />
                   <button className="sp-btn-save" onClick={addVariant} style={{whiteSpace: 'nowrap'}}>Add Variant</button>
                 </div>
-                <p style={{fontSize: '0.8rem', color: 'rgba(170,170,200,0.5)', marginTop: '0.5rem'}}>+ Add options like size or color</p>
+              </div>
+            </div>
+
+            {/* Colors */}
+            <div className="sp-card">
+              <h3>Colors</h3>
+              <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: '1rem'}}>
+                {colors.map((c, i) => (
+                  <div key={i} className="sp-color-chip" style={{display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.35rem 0.75rem', background: 'rgba(255,255,255,0.04)', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.08)'}}>
+                    <div style={{width: '14px', height: '14px', borderRadius: '50%', background: c.hex, border: '1px solid rgba(255,255,255,0.2)'}}></div>
+                    <span style={{fontSize: '0.85rem'}}>{c.name}</span>
+                    <button onClick={() => removeColor(i)} style={{background: 'none', border: 'none', color: '#f43f5e', cursor: 'pointer', fontSize: '1.1rem', padding: 0, marginLeft: '0.25rem'}}>×</button>
+                  </div>
+                ))}
+              </div>
+              
+              <div style={{marginTop: '1.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+                <input 
+                  type="color" 
+                  value={newColorHex} 
+                  onChange={e => setNewColorHex(e.target.value)}
+                  style={{width: '40px', height: '40px', border: 'none', background: 'none', cursor: 'pointer'}}
+                />
+                <input 
+                  className="sp-input" 
+                  placeholder="Color name (e.g. Midnight Blue)" 
+                  value={newColorName}
+                  onChange={e => setNewColorName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addColor()}
+                />
+                <button className="sp-btn-save" onClick={addColor}>Add Color</button>
               </div>
             </div>
 
