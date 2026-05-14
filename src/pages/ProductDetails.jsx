@@ -303,16 +303,6 @@ const ProductDetails = () => {
         </div>
       </section>
 
-      {/* ─── Press / Media ─── */}
-      <section className="container pdp-press">
-         <div className="press-logos">
-            <span>Forbes</span>
-            <span>HYPEBEAST</span>
-            <span>Esquire</span>
-            <span>GQ</span>
-            <span>Wired</span>
-         </div>
-      </section>
     </div>
   );
 };
