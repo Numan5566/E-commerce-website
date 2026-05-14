@@ -574,6 +574,8 @@ const AdminDashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchQ, setSearchQ] = useState('');
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, productId: null });
+  const [productTab, setProductTab] = useState('All');
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -783,7 +785,20 @@ const AdminDashboard = () => {
 
   /* ── PRODUCTS ── */
   const renderProducts = () => {
-    const filtered = products.filter(p => p.name?.toLowerCase().includes(searchQ.toLowerCase()));
+    let filtered = products.filter(p => p.name?.toLowerCase().includes(searchQ.toLowerCase()));
+    
+    if (productTab === 'Active') filtered = filtered.filter(p => p.status === 'Active');
+    if (productTab === 'Draft') filtered = filtered.filter(p => p.status === 'Draft');
+
+    const toggleSelectAll = () => {
+      if (selectedIds.length === filtered.length) setSelectedIds([]);
+      else setSelectedIds(filtered.map(p => p.id));
+    };
+
+    const toggleSelect = (id) => {
+      setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+    };
+
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="page-header-group">
@@ -795,10 +810,15 @@ const AdminDashboard = () => {
         <div className="sp-table-wrapper dashboard-card" style={{padding: 0}}>
           <div className="sp-table-top-bar">
             <div className="sp-table-tabs">
-              <button className="sp-tab active">All</button>
-              <button className="sp-tab">Active</button>
-              <button className="sp-tab">Draft</button>
-              <button className="sp-tab">Archived</button>
+              {['All', 'Active', 'Draft', 'Archived'].map(t => (
+                <button 
+                  key={t} 
+                  className={`sp-tab ${productTab === t ? 'active' : ''}`}
+                  onClick={() => setProductTab(t)}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
             <div style={{padding: '0.75rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '0.75rem', alignItems: 'center'}}>
                <div className="search-bar" style={{margin: 0, flex: 1, height: '32px', background: 'rgba(255,255,255,0.03)'}}>
@@ -814,33 +834,45 @@ const AdminDashboard = () => {
           <table className="admin-table sp-product-table">
             <thead>
               <tr>
-                <th style={{width: '40px'}}><input type="checkbox"/></th>
+                <th style={{width: '40px'}}>
+                  <input 
+                    type="checkbox" 
+                    checked={filtered.length > 0 && selectedIds.length === filtered.length}
+                    onChange={toggleSelectAll}
+                  />
+                </th>
                 <th>Product</th>
                 <th>Status</th>
                 <th>Inventory</th>
                 <th>Category</th>
                 <th>Product type</th>
                 <th>Vendor</th>
-                <th style={{width: '80px'}}>Actions</th>
+                <th style={{width: '100px'}}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map(p => (
-                <tr key={p.id}>
-                  <td><input type="checkbox"/></td>
+                <tr key={p.id} className={selectedIds.includes(p.id) ? 'selected' : ''}>
+                  <td>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedIds.includes(p.id)}
+                      onChange={() => toggleSelect(p.id)}
+                    />
+                  </td>
                   <td>
                     <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
                       <div className="sp-prod-thumb">
-                        {p.image ? <img src={p.image} alt="" /> : <Package size={16}/>}
+                        {p.image ? <img src={p.image} alt="" /> : <ImageIcon size={18} color="rgba(255,255,255,0.2)"/>}
                       </div>
-                      <span className="fw-bold" style={{fontSize: '0.9rem'}}>{p.name}</span>
+                      <span className="fw-bold" style={{fontSize: '0.9rem', color: '#fff'}}>{p.name}</span>
                     </div>
                   </td>
                   <td>
-                    <span className="sp-status-badge active">{p.status || 'Active'}</span>
+                    <span className={`sp-status-badge ${p.status?.toLowerCase() || 'active'}`}>{p.status || 'Active'}</span>
                   </td>
                   <td>
-                    <span style={{color: (p.stock || 0) < 10 ? '#f43f5e' : '#48bb78', fontSize: '0.85rem'}}>
+                    <span style={{color: (p.stock || 0) < 10 ? '#f43f5e' : '#48bb78', fontSize: '0.85rem', fontWeight: '500'}}>
                       {p.stock || 0} in stock
                     </span>
                   </td>
@@ -848,13 +880,18 @@ const AdminDashboard = () => {
                   <td className="text-muted" style={{fontSize: '0.85rem'}}>{p.type || '--'}</td>
                   <td className="text-muted" style={{fontSize: '0.85rem'}}>{p.vendor || '--'}</td>
                   <td>
-                    <div style={{display: 'flex', gap: '0.4rem'}}>
-                      <button className="btn-edit-sm" onClick={() => openEdit(p)}><Edit2 size={13}/></button>
-                      <button className="btn-del-sm" onClick={() => askDelete(p.id)}><Trash2 size={13}/></button>
+                    <div className="sp-action-btns">
+                      <button className="action-btn edit" onClick={() => openEdit(p)} title="Edit"><Edit2 size={14}/></button>
+                      <button className="action-btn delete" onClick={() => askDelete(p.id)} title="Delete"><Trash2 size={14}/></button>
                     </div>
                   </td>
                 </tr>
               ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan="8" style={{textAlign: 'center', padding: '3rem', color: '#555'}}>No products found matching your criteria.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

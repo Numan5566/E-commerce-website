@@ -1324,3 +1324,56 @@
   background: #e11d48;
   transform: translateY(-1px);
 }
+
+/* =============================================
+   PRODUCTS TABLE ENHANCEMENTS
+============================================= */
+.sp-action-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+.action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(224, 224, 240, 0.6);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.action-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.action-btn.edit:hover {
+  border-color: #7c6af7;
+  color: #7c6af7;
+  background: rgba(124,106,247,0.05);
+}
+.action-btn.delete:hover {
+  border-color: #f43f5e;
+  color: #f43f5e;
+  background: rgba(244,63,94,0.05);
+}
+
+.sp-product-table tr.selected {
+  background: rgba(124,106,247,0.05) !important;
+}
+
+.sp-status-badge.draft {
+  background: rgba(245,158,11,0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245,158,11,0.2);
+}
+
+.sp-status-badge.archived {
+  background: rgba(100,116,139,0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148,163,184,0.2);
+}
