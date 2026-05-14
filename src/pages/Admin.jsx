@@ -69,8 +69,10 @@ const ProductModal = ({ product, onSave, onClose }) => {
   const [dragging, setDragging] = useState(false);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
-  const [collections, setCollections] = useState([]);
+  const [collections, setCollections] = useState(product?.collections || []);
   const [customVendor, setCustomVendor] = useState('');
+  const [variants, setVariants] = useState(product?.variants || []);
+  const [newVariantName, setNewVariantName] = useState('');
 
   const ALL_COLLECTIONS = ['New Arrivals', 'Best Sellers', 'Trending Tech', 'Chargers & Gadgets', 'Home Essentials', 'Viral Products'];
 
@@ -84,6 +86,31 @@ const ProductModal = ({ product, onSave, onClose }) => {
 
   const removeTag = (t) => setTags(prev => prev.filter(x => x !== t));
   const toggleCollection = (c) => setCollections(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
+
+  const addVariant = () => {
+    if (!newVariantName) return;
+    setVariants([...variants, { name: newVariantName, values: [] }]);
+    setNewVariantName('');
+  };
+
+  const removeVariant = (index) => {
+    setVariants(variants.filter((_, i) => i !== index));
+  };
+
+  const addVariantValue = (vIndex, val) => {
+    if (!val.trim()) return;
+    const updated = [...variants];
+    if (!updated[vIndex].values.includes(val.trim())) {
+      updated[vIndex].values.push(val.trim());
+      setVariants(updated);
+    }
+  };
+
+  const removeVariantValue = (vIndex, val) => {
+    const updated = [...variants];
+    updated[vIndex].values = updated[vIndex].values.filter(v => v !== val);
+    setVariants(updated);
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -112,6 +139,7 @@ const ProductModal = ({ product, onSave, onClose }) => {
       stock: parseInt(form.stock || 0),
       tags,
       collections,
+      variants,
       vendor: form.vendor === '__custom__' ? customVendor : form.vendor
     });
   };
@@ -306,8 +334,50 @@ const ProductModal = ({ product, onSave, onClose }) => {
 
             {/* Variants */}
             <div className="sp-card">
-              <h3>Variants</h3>
-              <p className="sp-link-text" style={{marginTop: '0.5rem'}}>+ Add options like size or color</p>
+              <div className="sp-card-header">
+                <h3>Variants</h3>
+              </div>
+              
+              {variants.map((v, vIndex) => (
+                <div key={vIndex} className="sp-variant-item" style={{marginTop: '1.5rem', padding: '1rem', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', background: 'rgba(255,255,255,0.02)'}}>
+                  <div className="sp-card-header" style={{marginBottom: '0.5rem'}}>
+                    <span style={{fontWeight: '600', fontSize: '0.9rem'}}>{v.name}</span>
+                    <button className="sp-btn-icon" onClick={() => removeVariant(vIndex)}><Trash2 size={14} color="#f43f5e"/></button>
+                  </div>
+                  <div className="sp-tags-wrap">
+                    {v.values.map(val => (
+                      <span key={val} className="sp-tag-chip">
+                        {val}
+                        <button onClick={() => removeVariantValue(vIndex, val)}>×</button>
+                      </span>
+                    ))}
+                    <input 
+                      className="sp-tag-input" 
+                      placeholder="Add value (e.g. Red)..." 
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addVariantValue(vIndex, e.target.value);
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <div className="sp-form-group" style={{marginTop: '1.5rem'}}>
+                <div style={{display: 'flex', gap: '0.5rem'}}>
+                  <input 
+                    className="sp-input" 
+                    placeholder="Option name (e.g. Size)" 
+                    value={newVariantName}
+                    onChange={e => setNewVariantName(e.target.value)}
+                  />
+                  <button className="sp-btn-save" onClick={addVariant} style={{whiteSpace: 'nowrap'}}>Add Variant</button>
+                </div>
+                <p style={{fontSize: '0.8rem', color: 'rgba(170,170,200,0.5)', marginTop: '0.5rem'}}>+ Add options like size or color</p>
+              </div>
             </div>
 
             {/* Search engine listing */}
