@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, ShoppingBag, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop, regions } from '../context/ShopContext';
@@ -58,20 +59,20 @@ const Navbar = ({ onCartOpen }) => {
         <div className="container navbar-inner">
           {/* Brand */}
           <div className="nav-brand">
-            <a href="/">
+            <Link to="/">
               <img src={logoImg} alt="Lumina" className="nav-logo" />
               <span className="brand-text">LUMINA</span>
-            </a>
+            </Link>
           </div>
 
           {/* Links */}
           <nav className="nav-links">
-            <a href="/">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Best Sellers</a>
-            <a href="#">New Arrivals</a>
-            <a href="#">Track Order</a>
-            <a href="#">FAQ</a>
+            <Link to="/">Home</Link>
+            <Link to="/shop">Shop</Link>
+            <Link to="/shop">Best Sellers</Link>
+            <Link to="/shop">New Arrivals</Link>
+            <Link to="/track-order">Track Order</Link>
+            <Link to="/faq">FAQ</Link>
           </nav>
 
           {/* Actions */}

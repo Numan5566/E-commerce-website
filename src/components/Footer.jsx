@@ -46,11 +46,11 @@ const Footer = () => {
         <div className="footer-col">
           <h4 className="footer-col-title">Shop</h4>
           <ul className="footer-links">
-            <li><a href="#">New Arrivals</a></li>
-            <li><a href="#">Bestsellers</a></li>
-            <li><a href="#">Charging Tech</a></li>
-            <li><a href="#">Home Wellness</a></li>
-            <li><a href="#">Sale <span className="footer-badge">40% Off</span></a></li>
+            <li><Link to="/shop">New Arrivals</Link></li>
+            <li><Link to="/shop">Bestsellers</Link></li>
+            <li><Link to="/shop">Charging Tech</Link></li>
+            <li><Link to="/shop">Home Wellness</Link></li>
+            <li><Link to="/shop">Sale <span className="footer-badge">40% Off</span></Link></li>
           </ul>
         </div>
 
@@ -58,11 +58,11 @@ const Footer = () => {
         <div className="footer-col">
           <h4 className="footer-col-title">Company</h4>
           <ul className="footer-links">
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Careers</a></li>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/contact">Careers</Link></li>
             <li><Link to="/privacy-policy">Privacy Policy</Link></li>
             <li><Link to="/terms-of-service">Terms of Service</Link></li>
-            <li><a href="#">Contact</a></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
 

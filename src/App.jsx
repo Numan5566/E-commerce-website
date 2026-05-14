@@ -8,6 +8,11 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import ProductDetails from './pages/ProductDetails';
 import Checkout from './pages/Checkout';
+import Shop from './pages/Shop';
+import TrackOrder from './pages/TrackOrder';
+import FAQ from './pages/FAQ';
+import Contact from './pages/Contact';
+import Policy from './pages/Policy';
 import SalesPopup from './components/SalesPopup';
 import './App.css';
 
@@ -27,6 +32,13 @@ const AppContent = () => {
           <Route path="/admin" element={<Admin />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<Policy />} />
+          <Route path="/privacy-policy" element={<Policy />} />
+          <Route path="/terms-of-service" element={<Policy />} />
         </Routes>
       </main>
       {!isAdmin && <Footer />}
