@@ -1,4 +1,6 @@
+/* BUILD_TIMESTAMP: 2026-05-15_00:54 */
 import React from 'react';
+
 import { motion } from 'framer-motion';
 import { 
   ShoppingBag, ShieldCheck, Truck, 
