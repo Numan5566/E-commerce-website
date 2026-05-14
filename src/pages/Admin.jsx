@@ -57,100 +57,243 @@ const StatCard = ({ icon, label, value, sub, color }) => (
   </div>
 );
 
-/* ─── Add / Edit Product Modal ──────────────── */
+/* ─── Add / Edit Product Page (Shopify Style) ──────────────── */
 const ProductModal = ({ product, onSave, onClose }) => {
   const [form, setForm] = useState(product || {
     name: '', category: '', price: '', buyPrice: '',
-    tag: '', description: '', supplier: '', stock: '', image: ''
+    tag: '', description: '', supplier: '', stock: '', image: '',
+    comparePrice: '', status: 'Active', vendor: 'None', type: 'None'
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ ...form, price: parseFloat(form.price), buyPrice: parseFloat(form.buyPrice || 0), stock: parseInt(form.stock || 0) });
+    onSave({ ...form, price: parseFloat(form.price || 0), buyPrice: parseFloat(form.buyPrice || 0), stock: parseInt(form.stock || 0) });
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <motion.div
-        className="modal-box"
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="modal-header">
-          <h2>{product ? 'Edit Product' : 'Add New Product'}</h2>
-          <button className="modal-close" onClick={onClose}><X size={18} /></button>
+    <div className="sp-page-overlay">
+      <div className="sp-page">
+        <div className="sp-header">
+          <div className="sp-header-left">
+            <button className="sp-back-btn" onClick={onClose}><ArrowLeft size={20}/></button>
+            <h2>{product ? 'Edit product' : 'Add product'}</h2>
+          </div>
+          <div className="sp-header-right">
+            <button className="sp-btn-discard" onClick={onClose}>Discard</button>
+            <button className="sp-btn-save" onClick={handleSubmit}>Save</button>
+          </div>
         </div>
 
-        <form className="modal-form" onSubmit={handleSubmit}>
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Product Title *</label>
-              <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. MagSafe PowerStation" required />
+        <div className="sp-content">
+          <div className="sp-main-col">
+            
+            {/* Title & Description */}
+            <div className="sp-card">
+              <div className="sp-form-group">
+                <label>Title</label>
+                <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="Short sleeve t-shirt" />
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1.5rem'}}>
+                <label>Description</label>
+                <div className="sp-rte">
+                  <div className="sp-rte-toolbar">
+                    <button><Edit2 size={14}/></button>
+                    <select><option>Paragraph</option></select>
+                    <button className="bold">B</button>
+                    <button className="italic">I</button>
+                    <button className="underline">U</button>
+                    <button>A</button>
+                  </div>
+                  <textarea rows="8" value={form.description} onChange={e => set('description', e.target.value)}></textarea>
+                </div>
+              </div>
             </div>
-            <div className="form-group">
-              <label>Category *</label>
-              <input value={form.category} onChange={e => set('category', e.target.value)} placeholder="e.g. Charging Tech" required />
+
+            {/* Media */}
+            <div className="sp-card">
+              <h3>Media</h3>
+              <div className="sp-upload-zone">
+                <div className="sp-upload-content">
+                   <button className="sp-upload-btn">Upload new</button>
+                   <span className="sp-upload-text">Select existing</span>
+                </div>
+                <p className="sp-upload-hint">Accepts images, videos, or 3D models</p>
+                {form.image && <div style={{marginTop:'1rem'}}><img src={form.image} height="80" alt="preview"/></div>}
+                <input type="text" style={{marginTop:'1rem'}} placeholder="Or enter image URL..." value={form.image} onChange={e => set('image', e.target.value)} className="sp-input"/>
+              </div>
             </div>
+
+            {/* Category */}
+            <div className="sp-card">
+              <h3>Category</h3>
+              <select className="sp-input" value={form.category} onChange={e => set('category', e.target.value)}>
+                <option value="">Choose a product category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Home">Home</option>
+                <option value="Fashion">Fashion</option>
+              </select>
+            </div>
+
+            {/* Price */}
+            <div className="sp-card">
+              <h3>Price</h3>
+              <div className="sp-grid-2">
+                <div className="sp-form-group">
+                  <label>Price</label>
+                  <div className="sp-input-with-prefix">
+                    <span className="prefix">Rs</span>
+                    <input type="number" value={form.price} onChange={e => set('price', e.target.value)} placeholder="0.00" />
+                  </div>
+                </div>
+                <div className="sp-form-group">
+                  <label>Compare-at price</label>
+                  <div className="sp-input-with-prefix">
+                    <span className="prefix">Rs</span>
+                    <input type="number" value={form.comparePrice} onChange={e => set('comparePrice', e.target.value)} placeholder="0.00" />
+                  </div>
+                </div>
+              </div>
+              <div className="sp-checkbox-row">
+                <input type="checkbox" id="charge_tax" defaultChecked />
+                <label htmlFor="charge_tax">Charge tax on this product</label>
+              </div>
+              <div className="sp-divider"></div>
+              <div className="sp-grid-3">
+                <div className="sp-form-group">
+                  <label>Cost per item</label>
+                  <div className="sp-input-with-prefix">
+                    <span className="prefix">Rs</span>
+                    <input type="number" value={form.buyPrice} onChange={e => set('buyPrice', e.target.value)} placeholder="0.00" />
+                  </div>
+                </div>
+                <div className="sp-form-group">
+                  <label>Profit</label>
+                  <input className="sp-input disabled" value={form.price && form.buyPrice ? `Rs ${(form.price - form.buyPrice).toFixed(2)}` : '--'} disabled />
+                </div>
+                <div className="sp-form-group">
+                  <label>Margin</label>
+                  <input className="sp-input disabled" value={form.price && form.buyPrice ? `${Math.round(((form.price - form.buyPrice)/form.price)*100)}%` : '--'} disabled />
+                </div>
+              </div>
+            </div>
+
+            {/* Inventory */}
+            <div className="sp-card">
+              <div className="sp-card-header">
+                <h3>Inventory</h3>
+                <div className="sp-toggle-wrap">
+                  <label>Inventory tracked</label>
+                  <input type="checkbox" className="sp-toggle" defaultChecked />
+                </div>
+              </div>
+              <div className="sp-grid-2" style={{marginTop: '1.5rem'}}>
+                 <div className="sp-form-group">
+                    <label>Shop location</label>
+                    <input type="number" className="sp-input" value={form.stock} onChange={e => set('stock', e.target.value)} placeholder="0" />
+                 </div>
+              </div>
+              <div className="sp-filter-row" style={{marginTop: '1.5rem'}}>
+                 <span>SKU</span> <span>Barcode</span> <span>Sell when out of stock <span className="sp-badge">Off</span></span>
+              </div>
+            </div>
+
+            {/* Shipping */}
+            <div className="sp-card">
+              <div className="sp-card-header">
+                <h3>Shipping</h3>
+                <div className="sp-toggle-wrap">
+                  <label>Physical product</label>
+                  <input type="checkbox" className="sp-toggle" defaultChecked />
+                </div>
+              </div>
+              <div className="sp-grid-2" style={{marginTop: '1.5rem'}}>
+                 <div className="sp-form-group">
+                    <label>Weight</label>
+                    <div className="sp-input-with-suffix">
+                       <input type="number" placeholder="0.0" />
+                       <span className="suffix">kg</span>
+                    </div>
+                 </div>
+              </div>
+              <div className="sp-filter-row" style={{marginTop: '1.5rem'}}>
+                 <span>Country of origin</span> <span>HS Code</span>
+              </div>
+            </div>
+
+            {/* Variants */}
+            <div className="sp-card">
+              <h3>Variants</h3>
+              <p className="sp-link-text" style={{marginTop: '0.5rem'}}>+ Add options like size or color</p>
+            </div>
+
+            {/* Search engine listing */}
+            <div className="sp-card">
+               <div className="sp-card-header">
+                  <h3>Search engine listing</h3>
+                  <button className="sp-btn-icon"><Edit2 size={14}/></button>
+               </div>
+               <p style={{color: '#666', fontSize: '0.85rem', marginTop: '0.5rem'}}>Add a title and description to see how this product might appear in a search engine listing</p>
+            </div>
+
           </div>
 
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Sell Price (USD) *</label>
-              <input type="number" step="0.01" value={form.price} onChange={e => set('price', e.target.value)} placeholder="59.99" required />
+          <div className="sp-side-col">
+            {/* Status */}
+            <div className="sp-card">
+              <h3>Status</h3>
+              <select className="sp-input" value={form.status} onChange={e => set('status', e.target.value)}>
+                <option value="Active">Active</option>
+                <option value="Draft">Draft</option>
+              </select>
             </div>
-            <div className="form-group">
-              <label>Buy / Cost Price (USD)</label>
-              <input type="number" step="0.01" value={form.buyPrice} onChange={e => set('buyPrice', e.target.value)} placeholder="15.00" />
+
+            {/* Publishing */}
+            <div className="sp-card">
+              <div className="sp-card-header">
+                <h3>Publishing</h3>
+              </div>
+              <p style={{fontSize: '0.85rem', color: '#333', marginTop: '1rem', display: 'flex', alignItems:'center', gap:'8px'}}>
+                <Globe2 size={14} color="#666"/> All channels
+              </p>
             </div>
-          </div>
 
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Stock Qty</label>
-              <input type="number" value={form.stock} onChange={e => set('stock', e.target.value)} placeholder="100" />
+            {/* Product Organization */}
+            <div className="sp-card">
+              <h3>Product organization</h3>
+              <div className="sp-form-group" style={{marginTop: '1.5rem'}}>
+                <label>Type</label>
+                <select className="sp-input" value={form.type} onChange={e => set('type', e.target.value)}>
+                  <option value="None">None</option>
+                </select>
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1rem'}}>
+                <label>Vendor</label>
+                <select className="sp-input" value={form.vendor} onChange={e => set('vendor', e.target.value)}>
+                  <option value="None">None</option>
+                </select>
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1rem'}}>
+                <label>Collections</label>
+                <div className="sp-input-tag">+ Add collections</div>
+              </div>
+              <div className="sp-form-group" style={{marginTop: '1rem'}}>
+                <label>Tags</label>
+                <div className="sp-input-tag">+ Add tags</div>
+              </div>
             </div>
-            <div className="form-group">
-              <label>Product Tag</label>
-              <input value={form.tag} onChange={e => set('tag', e.target.value)} placeholder="🔥 Best Seller" />
+
+            {/* Theme template */}
+            <div className="sp-card">
+               <h3>Theme template</h3>
+               <select className="sp-input" style={{marginTop: '1rem'}}>
+                  <option>Default product</option>
+               </select>
             </div>
-          </div>
 
-          <div className="form-group">
-            <label>Image URL</label>
-            <input value={form.image} onChange={e => set('image', e.target.value)} placeholder="https://images.unsplash.com/..." />
-            {form.image && <img src={form.image} alt="preview" className="img-preview" onError={e => e.target.style.display='none'} />}
           </div>
-
-          <div className="form-group">
-            <label>AliExpress / Supplier Link</label>
-            <input value={form.supplier} onChange={e => set('supplier', e.target.value)} placeholder="https://www.aliexpress.com/item/..." />
-          </div>
-
-          <div className="form-group">
-            <label>Description</label>
-            <textarea rows={3} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Short product description..." />
-          </div>
-
-          {form.price && form.buyPrice && (
-            <div className="margin-preview">
-              <span>💰 Est. Margin: <strong style={{ color: '#48bb78' }}>
-                {Math.round(((form.price - form.buyPrice) / form.price) * 100)}%
-              </strong></span>
-              <span>Profit/unit: <strong style={{ color: '#48bb78' }}>
-                ${(form.price - form.buyPrice).toFixed(2)}
-              </strong></span>
-            </div>
-          )}
-
-          <div className="modal-footer">
-            <button type="button" className="btn-cancel" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn-save"><Save size={15} /> Save Product</button>
-          </div>
-        </form>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 };
