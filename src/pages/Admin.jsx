@@ -912,6 +912,22 @@ const AdminDashboard = () => {
   };
 
   /* ── COLLECTIONS ── */
+  const [newCollTitle, setNewCollTitle] = useState('');
+  const [newCollType, setNewCollType] = useState('Manual');
+
+  const handleSaveCollection = () => {
+    if (!newCollTitle) return;
+    const newColl = {
+      id: collections.length + 1,
+      title: newCollTitle,
+      products: 0,
+      type: newCollType
+    };
+    setCollections([...collections, newColl]);
+    setIsAddingCollection(false);
+    setNewCollTitle('');
+  };
+
   const renderCollections = () => {
     if (isAddingCollection) return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -920,7 +936,7 @@ const AdminDashboard = () => {
             <button className="back-btn" onClick={() => setIsAddingCollection(false)}><ArrowLeft size={16} /> Collections</button>
             <h1>Add collection</h1>
           </div>
-          <button className="btn-save" onClick={() => setIsAddingCollection(false)}>Save</button>
+          <button className="btn-save" onClick={handleSaveCollection}>Save</button>
         </div>
 
         <div className="sp-add-product-layout">
@@ -928,7 +944,12 @@ const AdminDashboard = () => {
             <div className="sp-card">
               <div className="sp-form-group">
                 <label>Title</label>
-                <input className="sp-input" placeholder="e.g. Summer collection, Under $100" />
+                <input 
+                  className="sp-input" 
+                  placeholder="e.g. Summer collection, Under $100" 
+                  value={newCollTitle}
+                  onChange={e => setNewCollTitle(e.target.value)}
+                />
               </div>
               <div className="sp-form-group" style={{marginTop: '1.5rem'}}>
                 <label>Description</label>
@@ -942,14 +963,14 @@ const AdminDashboard = () => {
               <h3>Collection type</h3>
               <div style={{marginTop: '1rem'}}>
                 <div style={{display: 'flex', gap: '1rem', alignItems: 'flex-start', marginBottom: '1rem'}}>
-                  <input type="radio" name="collType" defaultChecked style={{marginTop: '4px'}} />
+                  <input type="radio" name="collType" checked={newCollType === 'Manual'} onChange={() => setNewCollType('Manual')} style={{marginTop: '4px'}} />
                   <div>
                     <div className="fw-bold" style={{fontSize: '0.9rem'}}>Manual</div>
                     <p className="text-muted" style={{fontSize: '0.8rem'}}>Add products to this collection one by one.</p>
                   </div>
                 </div>
                 <div style={{display: 'flex', gap: '1rem', alignItems: 'flex-start'}}>
-                  <input type="radio" name="collType" style={{marginTop: '4px'}} />
+                  <input type="radio" name="collType" checked={newCollType === 'Smart'} onChange={() => setNewCollType('Smart')} style={{marginTop: '4px'}} />
                   <div>
                     <div className="fw-bold" style={{fontSize: '0.9rem'}}>Smart</div>
                     <p className="text-muted" style={{fontSize: '0.8rem'}}>Existing and future products that match conditions will be added automatically.</p>
