@@ -2,49 +2,56 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { ShopProvider, useShop } from './context/ShopContext';
 import { 
-  ShoppingBag, User, Search, Menu, X, 
-  ArrowRight, Globe, ShieldCheck, 
-  Truck, LayoutDashboard, LogOut,
-  Package, ShoppingCart, TrendingUp, Star,
-  CheckCircle, ChevronRight, Info, Award,
-  Instagram, Facebook, Heart
+  ShoppingBag, User, Search, X, 
+  Truck, ShieldCheck, Star, CheckCircle, Heart,
+  Instagram, Facebook, MessageCircle, ArrowRight, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 /* ─── SHARED COMPONENTS ─── */
 
 const Header = ({ onCartOpen }) => {
   const { cart } = useShop();
   const [scrolled, setScrolled] = useState(false);
+  const [announcementIdx, setAnnouncementIdx] = useState(0);
+  
+  const announcements = [
+    "FREE WORLDWIDE SHIPPING ON ORDERS OVER AED 500",
+    "NEW EID COLLECTION: SHOP THE LATEST DROPS",
+    "24H EXPRESS DELIVERY IN DUBAI & ABU DHABI"
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
+    const interval = setInterval(() => setAnnouncementIdx(p => (p + 1) % announcements.length), 4000);
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
-    <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: scrolled ? '#fff' : 'transparent', borderBottom: scrolled ? '1px solid #eee' : 'none', transition: 'all 0.3s' }}>
-      <div style={{ background: '#000', color: '#fff', textAlign: 'center', padding: '10px 0', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '2px' }}>
-        FREE WORLDWIDE SHIPPING ON ALL ORDERS | دبي - أبو ظبي
+    <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: scrolled ? '#fff' : 'rgba(255,255,255,0.95)', borderBottom: '1px solid #eee', transition: 'all 0.3s' }}>
+      <div style={{ background: '#000', color: '#fff', textAlign: 'center', padding: '8px 0', fontSize: '0.65rem', fontWeight: 800, letterSpacing: '2px', overflow: 'hidden' }}>
+        {announcements[announcementIdx]}
       </div>
-      <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '20px 40px' }}>
-        <div style={{ display: 'flex', gap: '25px', fontSize: '0.8rem', fontWeight: 700 }}>
-          <Link to="/" style={{ color: scrolled ? '#000' : '#000' }}>MENS</Link>
-          <Link to="/" style={{ color: scrolled ? '#000' : '#000' }}>WOMENS</Link>
-          <Link to="/" style={{ color: scrolled ? '#000' : '#000' }}>BEST SELLERS</Link>
+      <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', padding: '15px 40px' }}>
+        <div style={{ display: 'flex', gap: '25px', fontSize: '0.75rem', fontWeight: 800 }}>
+          <Link to="/" style={{ color: '#000' }}>WATCHES</Link>
+          <Link to="/" style={{ color: '#000' }}>PERFUMES</Link>
+          <Link to="/" style={{ color: '#000' }}>ACCESSORIES</Link>
         </div>
         
-        <Link to="/" style={{ fontSize: '1.8rem', fontWeight: 900, letterSpacing: '5px', color: '#000', textAlign: 'center' }}>
+        <Link to="/" style={{ fontSize: '1.8rem', fontWeight: 900, letterSpacing: '8px', color: '#000', textAlign: 'center', marginLeft: '40px' }}>
           MINIMALIST
         </Link>
 
-        <div style={{ display: 'flex', gap: '25px', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Search size={20} color="#000" />
-          <Link to="/admin"><User size={20} color="#000" /></Link>
+        <div style={{ display: 'flex', gap: '20px', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Search size={18} color="#000" />
+          <Link to="/admin"><User size={18} color="#000" /></Link>
           <button onClick={onCartOpen} style={{ background: 'none', border: 'none', color: '#000', position: 'relative', cursor: 'pointer' }}>
             <ShoppingBag size={20} />
-            {cart.length > 0 && <span style={{ position: 'absolute', top: -8, right: -10, background: '#000', color: '#fff', borderRadius: '50%', width: 18, height: 18, fontSize: '0.65rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cart.length}</span>}
+            {cart.length > 0 && <span style={{ position: 'absolute', top: -8, right: -10, background: '#000', color: '#fff', borderRadius: '50%', width: 18, height: 18, fontSize: '0.6rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cart.length}</span>}
           </button>
         </div>
       </div>
@@ -55,68 +62,77 @@ const Header = ({ onCartOpen }) => {
 /* ─── PAGES ─── */
 
 const Home = () => {
-  const { products, addToCart, formatPrice } = useShop();
+  const { products, formatPrice } = useShop();
+  
+  const categories = [
+    { name: "Mens Collection", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80" },
+    { name: "Womens Series", img: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=800&q=80" },
+    { name: "Luxury Fragrance", img: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80" }
+  ];
+
   return (
     <div style={{ paddingTop: '0' }}>
-      {/* Hero Section */}
-      <section style={{ height: '95vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=80" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: -1 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.1)' }}></div>
-        <div className="container" style={{ textAlign: 'center', position: 'relative' }}>
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', color: '#000', marginBottom: '30px' }}>THE EID <br />COLLECTION</motion.h1>
-          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-             <button className="btn-black">Shop Mens</button>
-             <button className="btn-black">Shop Womens</button>
+      {/* Hero */}
+      <section style={{ height: '90vh', background: 'url("https://images.unsplash.com/photo-1490367532201-b9bc1dc483f6?w=1600&q=80") center/cover no-repeat', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center', color: '#fff', padding: '0 20px' }}>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 900, textShadow: '0 10px 30px rgba(0,0,0,0.3)', marginBottom: '30px' }}>ELEVATED <br/>ESSENTIALS</h1>
+          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+            <button className="btn-black">Shop Watches</button>
+            <button className="btn-black" style={{ background: '#fff', color: '#000' }}>Shop Fragrance</button>
           </div>
         </div>
       </section>
 
-      {/* Featured Grid */}
-      <section className="container" style={{ padding: '100px 0' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '60px' }}>
-           <div>
-              <span style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '3px', color: '#888' }}>CURATED FOR YOU</span>
-              <h2 style={{ fontSize: '2.5rem', marginTop: '10px' }}>LATEST ARRIVALS</h2>
-           </div>
-           <Link to="/" style={{ fontWeight: 700, borderBottom: '2px solid #000', paddingBottom: '5px' }}>VIEW ALL</Link>
-        </div>
+      {/* Category Grid */}
+      <section className="container" style={{ padding: '80px 0', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+        {categories.map((cat, i) => (
+          <div key={i} style={{ height: '500px', position: 'relative', overflow: 'hidden' }}>
+            <img src={cat.img} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: '0.5s' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '40px' }}>
+              <h3 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: '15px' }}>{cat.name}</h3>
+              <Link to="/" style={{ color: '#fff', fontSize: '0.8rem', fontWeight: 800, textDecoration: 'underline' }}>SHOP NOW</Link>
+            </div>
+          </div>
+        ))}
+      </section>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px' }}>
+      {/* Product List */}
+      <section className="container" style={{ paddingBottom: '100px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h2 style={{ fontSize: '2.5rem' }}>TRENDING IN UAE</h2>
+          <div style={{ width: '50px', height: '2px', background: '#000', margin: '20px auto' }}></div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
           {products.map(p => (
-            <motion.div key={p.id} className="product-card" whileHover={{ y: -5 }}>
+            <div key={p.id} className="product-card">
               <Link to={`/product/${p.id}`}>
-                <div style={{ position: 'relative', background: '#F8F8F8', height: '450px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
-                     <span className="badge-new">NEW</span>
-                  </div>
-                  <img src={p.image} alt={p.name} style={{ width: '80%', height: '80%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-                  <button className="glass" style={{ position: 'absolute', bottom: '20px', right: '20px', padding: '12px', borderRadius: '50%', border: 'none' }}>
-                    <Heart size={18} />
-                  </button>
+                <div style={{ background: '#F8F8F8', height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                  <img src={p.image} alt={p.name} style={{ width: '85%', height: '85%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+                  <div style={{ position: 'absolute', top: '20px', left: '20px' }}><span className="badge-new">{p.tag}</span></div>
                 </div>
                 <div style={{ padding: '20px 0', textAlign: 'center' }}>
-                   <span style={{ fontSize: '0.7rem', color: '#888', fontWeight: 800, letterSpacing: '2px' }}>{p.tag}</span>
-                   <h3 style={{ fontSize: '1rem', margin: '8px 0', letterSpacing: '0' }}>{p.name}</h3>
-                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
-                      <span style={{ fontWeight: 800, fontSize: '1.1rem' }}>{formatPrice(p.price)}</span>
-                      <div style={{ display: 'flex', color: 'var(--accent-gold)' }}><Star size={12} fill="currentColor" /> <span style={{ fontSize: '0.8rem', color: '#000', fontWeight: 700, marginLeft: '5px' }}>4.9</span></div>
+                   <h3 style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '8px' }}>{p.name}</h3>
+                   <div style={{ fontWeight: 900 }}>{formatPrice(p.price)}</div>
+                   <div style={{ display: 'flex', justifyContent: 'center', color: '#D4AF37', marginTop: '5px' }}>
+                      <Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" />
                    </div>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Full Width Banner */}
-      <section style={{ height: '70vh', position: 'relative', overflow: 'hidden', marginBottom: '100px' }}>
-         <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=1600&q=80" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: '#fff' }}>
-            <div className="container">
-               <h2 style={{ fontSize: '4rem', marginBottom: '20px' }}>THE ART OF <br />MINIMALISM</h2>
-               <button className="btn-outline-black" style={{ borderColor: '#fff', color: '#fff' }}>DISCOVER MORE</button>
-            </div>
-         </div>
+      {/* Newsletter */}
+      <section style={{ background: '#F4F4F4', padding: '100px 0', textAlign: 'center' }}>
+        <div className="container" style={{ maxWidth: '600px' }}>
+           <h2 style={{ fontSize: '2rem', marginBottom: '15px' }}>JOIN THE MINIMALIST CLUB</h2>
+           <p style={{ color: '#666', marginBottom: '40px' }}>Subscribe for 10% off your first UAE order and exclusive early access.</p>
+           <div style={{ display: 'flex', gap: '10px' }}>
+             <input placeholder="Email Address" style={{ flex: 1, padding: '15px', border: '1px solid #ddd' }} />
+             <button className="btn-black">JOIN</button>
+           </div>
+        </div>
       </section>
     </div>
   );
@@ -125,75 +141,33 @@ const Home = () => {
 const ProductDetails = () => {
   const { id } = useParams();
   const { products, addToCart, formatPrice } = useShop();
-  const [product, setProduct] = useState(null);
+  const product = products.find(p => p.id === parseInt(id));
 
-  useEffect(() => {
-    const found = products.find(p => p.id === parseInt(id));
-    if (found) setProduct(found);
-    window.scrollTo(0, 0);
-  }, [id, products]);
-
-  if (!product) return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>;
+  if (!product) return <div style={{ paddingTop: '200px', textAlign: 'center' }}>Loading...</div>;
 
   return (
     <div className="container" style={{ paddingTop: '180px', paddingBottom: '100px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '80px' }}>
-        {/* Gallery */}
-        <div style={{ display: 'flex', gap: '20px' }}>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '80px' }}>
-              {[1,2,3,4].map(i => <img key={i} src={product.image} style={{ width: '100%', height: '80px', objectFit: 'cover', border: i === 1 ? '1px solid #000' : '1px solid #eee' }} />)}
-           </div>
-           <div style={{ flex: 1, background: '#F8F8F8', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
-              <img src={product.image} style={{ width: '100%', height: 'auto', maxHeight: '600px', objectFit: 'contain' }} />
-           </div>
+        <div style={{ background: '#F8F8F8', padding: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src={product.image} style={{ width: '100%', maxHeight: '600px', objectFit: 'contain' }} />
         </div>
-
-        {/* Info */}
         <div>
-           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#888', letterSpacing: '3px' }}>{product.tag}</span>
-           <h1 style={{ fontSize: '3rem', margin: '15px 0' }}>{product.name}</h1>
-           <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginBottom: '30px' }}>
-              <span style={{ fontSize: '2rem', fontWeight: 800 }}>{formatPrice(product.price)}</span>
-              <span style={{ color: 'var(--accent-green)', fontWeight: 700, fontSize: '0.9rem' }}>• FREE SHIPPING BY TOMORROW</span>
+           <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#888', letterSpacing: '3px' }}>{product.tag}</span>
+           <h1 style={{ fontSize: '2.5rem', margin: '15px 0', fontWeight: 900 }}>{product.name}</h1>
+           <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
+              <div style={{ fontSize: '2rem', fontWeight: 900 }}>{formatPrice(product.price)}</div>
+              <span style={{ color: '#10B981', fontWeight: 700, fontSize: '0.85rem' }}>✓ IN STOCK & READY TO SHIP</span>
            </div>
-
-           <p style={{ color: '#444', lineHeight: '1.8', marginBottom: '40px' }}>{product.desc} Designed for the modern visionary, this piece combines timeless aesthetics with high-performance functionality.</p>
-
-           <div style={{ marginBottom: '40px' }}>
-              <p style={{ fontWeight: 700, fontSize: '0.8rem', marginBottom: '15px' }}>SELECT COLOR</p>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                 <div style={{ width: '35px', height: '35px', background: '#000', borderRadius: '50%', border: '2px solid #fff', boxShadow: '0 0 0 1px #000' }}></div>
-                 <div style={{ width: '35px', height: '35px', background: '#888', borderRadius: '50%' }}></div>
-                 <div style={{ width: '35px', height: '35px', background: '#D4AF37', borderRadius: '50%' }}></div>
-              </div>
-           </div>
-
-           <button className="btn-black" style={{ width: '100%', padding: '20px', fontSize: '0.9rem' }} onClick={() => addToCart(product)}>ADD TO BAG</button>
            
-           <div style={{ marginTop: '50px', borderTop: '1px solid #eee', paddingTop: '30px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-              <div style={{ display: 'flex', gap: '15px' }}><Truck size={20}/><div style={{ fontSize: '0.8rem' }}><strong>Express Shipping</strong><br/>Dubai & Abu Dhabi</div></div>
-              <div style={{ display: 'flex', gap: '15px' }}><ShieldCheck size={20}/><div style={{ fontSize: '0.8rem' }}><strong>Authenticity</strong><br/>100% Genuine Tech</div></div>
+           <p style={{ color: '#444', lineHeight: '1.8', marginBottom: '40px' }}>{product.desc}</p>
+           <button className="btn-black" style={{ width: '100%', padding: '20px', fontSize: '0.9rem' }} onClick={() => addToCart(product)}>ADD TO SHOPPING BAG</button>
+           
+           <div style={{ marginTop: '50px', borderTop: '1px solid #eee', paddingTop: '40px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+              <div style={{ display: 'flex', gap: '15px' }}><Truck size={24}/> <div><strong>Next-Day Delivery</strong><br/><span style={{ fontSize: '0.75rem', color: '#888' }}>Dubai, Abu Dhabi, Sharjah</span></div></div>
+              <div style={{ display: 'flex', gap: '15px' }}><ShieldCheck size={24}/> <div><strong>Local Warranty</strong><br/><span style={{ fontSize: '0.75rem', color: '#888' }}>2 Years Official UAE</span></div></div>
            </div>
         </div>
       </div>
-
-      {/* Reviews */}
-      <section style={{ marginTop: '120px' }}>
-         <h2 style={{ fontSize: '2rem', textAlign: 'center', marginBottom: '60px' }}>VERIFIED CUSTOMER REVIEWS</h2>
-         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px' }}>
-            {[{n: "Ahmed A.", l: "Dubai"}, {n: "Sarah R.", l: "Abu Dhabi"}, {n: "Omar J.", l: "Sharjah"}].map((u, i) => (
-              <div key={i} style={{ borderBottom: '1px solid #eee', paddingBottom: '40px' }}>
-                 <div style={{ display: 'flex', color: 'var(--accent-gold)', marginBottom: '15px' }}>{[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div>
-                 <p style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '10px' }}>"Highly Recommend!"</p>
-                 <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '20px' }}>Exactly as described. The minimalist design is perfect for my collection.</p>
-                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '30px', height: '30px', background: '#eee', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.7rem' }}>{u.n[0]}</div>
-                    <div><div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{u.n} <CheckCircle size={10} color="var(--accent-green)" /></div><div style={{ fontSize: '0.7rem', color: '#888' }}>Verified Buyer in {u.l}</div></div>
-                 </div>
-              </div>
-            ))}
-         </div>
-      </section>
     </div>
   );
 };
@@ -204,18 +178,12 @@ const Admin = () => {
   const { products, formatPrice } = useShop();
 
   if (!auth) return (
-    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8F8F8' }}>
-      <div style={{ padding: '60px', background: '#fff', borderRadius: '0', textAlign: 'center', width: '450px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
+    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F4F4F4' }}>
+      <div style={{ padding: '60px', background: '#fff', textAlign: 'center', width: '450px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
         <h2 style={{ marginBottom: '10px', letterSpacing: '5px' }}>MINIMALIST</h2>
-        <p style={{ color: '#888', fontSize: '0.8rem', marginBottom: '40px' }}>ADMINISTRATION ACCESS</p>
-        <input 
-          type="password" 
-          placeholder="Passcode" 
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
-          style={{ width: '100%', padding: '18px', background: '#F8F8F8', border: '1px solid #EEE', color: '#000', marginBottom: '20px', textAlign: 'center' }} 
-        />
-        <button className="btn-black" onClick={() => pass === 'admin123' ? setAuth(true) : alert('Invalid')} style={{ width: '100%' }}>LOGIN</button>
+        <p style={{ color: '#888', fontSize: '0.8rem', marginBottom: '40px' }}>ADMINISTRATION PORTAL</p>
+        <input type="password" placeholder="Master Key" value={pass} onChange={(e) => setPass(e.target.value)} style={{ width: '100%', padding: '18px', background: '#F8F8F8', border: '1px solid #EEE', marginBottom: '20px', textAlign: 'center' }} />
+        <button className="btn-black" onClick={() => pass === 'admin123' ? setAuth(true) : alert('Denied')} style={{ width: '100%' }}>ACCESS</button>
       </div>
     </div>
   );
@@ -224,18 +192,17 @@ const Admin = () => {
     <div style={{ display: 'flex', minHeight: '100vh', background: '#fff' }}>
       <aside style={{ width: '300px', borderRight: '1px solid #EEE', padding: '50px 30px' }}>
         <div style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '3px', marginBottom: '60px' }}>MINIMALIST HQ</div>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
            <button style={{ background: '#000', color: '#fff', padding: '15px', textAlign: 'left', fontWeight: 700, border: 'none' }}>DASHBOARD</button>
            <button style={{ background: 'none', color: '#888', padding: '15px', textAlign: 'left', fontWeight: 700, border: 'none' }}>ORDERS</button>
-           <button style={{ background: 'none', color: '#888', padding: '15px', textAlign: 'left', fontWeight: 700, border: 'none' }}>PRODUCTS</button>
         </nav>
       </aside>
       <main style={{ flex: 1, padding: '50px' }}>
-         <h2 style={{ fontSize: '2rem', marginBottom: '40px' }}>UAE SALES PERFORMANCE</h2>
+         <h2 style={{ fontSize: '2rem', marginBottom: '40px' }}>UAE PERFORMANCE</h2>
          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' }}>
             <div style={{ padding: '30px', background: '#F8F8F8' }}><span>Revenue</span><h3 style={{ fontSize: '2rem' }}>AED 24,500</h3></div>
             <div style={{ padding: '30px', background: '#F8F8F8' }}><span>Orders</span><h3 style={{ fontSize: '2rem' }}>42</h3></div>
-            <div style={{ padding: '30px', background: '#F8F8F8' }}><span>Views</span><h3 style={{ fontSize: '2rem' }}>1.8K</h3></div>
+            <div style={{ padding: '30px', background: '#F8F8F8' }}><span>Market</span><h3 style={{ fontSize: '2rem' }}>DUBAI</h3></div>
          </div>
       </main>
     </div>
@@ -249,7 +216,7 @@ const Checkout = () => {
 
   return (
     <div className="container" style={{ paddingTop: '180px', paddingBottom: '100px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '80px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '60px' }}>
         <div>
            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px' }}>SECURE CHECKOUT</h2>
            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
@@ -257,15 +224,16 @@ const Checkout = () => {
               <input placeholder="Last Name" style={{ padding: '18px', border: '1px solid #EEE', background: '#F8F8F8' }} />
            </div>
            <select style={{ width: '100%', padding: '18px', border: '1px solid #EEE', background: '#F8F8F8', marginBottom: '20px' }}>
-              <option>Emirate</option><option>Dubai</option><option>Abu Dhabi</option>
+              <option>Select Emirate</option><option>Dubai</option><option>Abu Dhabi</option>
            </select>
-           <input placeholder="Address" style={{ width: '100%', padding: '18px', border: '1px solid #EEE', background: '#F8F8F8', marginBottom: '40px' }} />
-           <button className="btn-black" style={{ width: '100%' }}>PLACE ORDER (CASH ON DELIVERY)</button>
+           <input placeholder="Mobile Phone" style={{ width: '100%', padding: '18px', border: '1px solid #EEE', background: '#F8F8F8', marginBottom: '20px' }} />
+           <input placeholder="Delivery Address" style={{ width: '100%', padding: '18px', border: '1px solid #EEE', background: '#F8F8F8', marginBottom: '40px' }} />
+           <button className="btn-black" style={{ width: '100%', padding: '20px' }} onClick={() => alert('Order Placed!')}>COMPLETE ORDER (COD)</button>
         </div>
         <div style={{ padding: '40px', background: '#F8F8F8' }}>
-           <h3>ORDER SUMMARY</h3>
+           <h3>SUMMARY</h3>
            {cart.map(i => <div key={i.id} style={{ display: 'flex', justifyContent: 'space-between', margin: '20px 0' }}><span>{i.name} x{i.qty}</span><span>{formatPrice(i.price * i.qty)}</span></div>)}
-           <div style={{ borderTop: '1px solid #EEE', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', fontWeight: 800 }}><span>TOTAL</span><span>{formatPrice(total)}</span></div>
+           <div style={{ borderTop: '1px solid #EEE', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', fontWeight: 900, fontSize: '1.2rem' }}><span>TOTAL</span><span>{formatPrice(total)}</span></div>
         </div>
       </div>
     </div>
@@ -285,33 +253,38 @@ const AppContent = () => {
     <div className="app-container">
       {!isAdmin && <Header onCartOpen={() => setCartOpen(true)} />}
       
-      <AnimatePresence>
-        {cartOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setCartOpen(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
-            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} style={{ position: 'fixed', top: 0, right: 0, width: '450px', background: '#fff', height: '100%', padding: '50px', zIndex: 1001, boxShadow: '-20px 0 60px rgba(0,0,0,0.05)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px' }}>
-                <h2 style={{ fontSize: '1.2rem' }}>SHOPPING BAG</h2>
-                <button onClick={() => setCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={24}/></button>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', height: 'calc(100% - 250px)', overflowY: 'auto' }}>
-                {cart.map(item => (
-                  <div key={item.id} style={{ display: 'flex', gap: '20px' }}>
-                     <img src={item.image} style={{ width: '80px', height: '80px', objectFit: 'contain', background: '#F8F8F8' }} />
-                     <div style={{ flex: 1 }}><h4>{item.name}</h4><div style={{ fontWeight: 800, marginTop: '5px' }}>{formatPrice(item.price)}</div></div>
-                     <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#888' }}><X size={18}/></button>
-                  </div>
-                ))}
-                {cart.length === 0 && <p style={{ textAlign: 'center', color: '#888', marginTop: '50px' }}>BAG IS EMPTY</p>}
-              </div>
-              <div style={{ position: 'absolute', bottom: '50px', left: '50px', right: '50px' }}>
-                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px', fontWeight: 800, fontSize: '1.2rem' }}><span>TOTAL</span><span>{formatPrice(total)}</span></div>
-                 <Link to="/checkout" onClick={() => setCartOpen(false)} className="btn-black" style={{ width: '100%', textAlign: 'center', display: 'block' }}>CHECKOUT NOW</Link>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* WhatsApp Button */}
+      {!isAdmin && (
+        <a href="https://wa.me/971501234567" target="_blank" style={{ position: 'fixed', bottom: '30px', right: '30px', background: '#25D366', color: '#fff', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
+          <MessageCircle size={32} />
+        </a>
+      )}
+
+      {cartOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 3000, display: 'flex', justifyContent: 'flex-end' }}>
+          <div onClick={() => setCartOpen(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)' }} />
+          <div style={{ width: '450px', background: '#fff', position: 'relative', padding: '50px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px' }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '2px' }}>SHOPPING BAG</h2>
+              <button onClick={() => setCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={32}/></button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', height: 'calc(100% - 250px)', overflowY: 'auto' }}>
+              {cart.map(item => (
+                <div key={item.id} style={{ display: 'flex', gap: '20px' }}>
+                   <img src={item.image} style={{ width: '80px', height: '80px', objectFit: 'contain', background: '#F8F8F8' }} />
+                   <div style={{ flex: 1 }}><h4 style={{ fontSize: '0.9rem' }}>{item.name}</h4><div style={{ fontWeight: 900, marginTop: '5px' }}>{formatPrice(item.price)}</div></div>
+                   <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#888' }}><X size={18}/></button>
+                </div>
+              ))}
+              {cart.length === 0 && <p style={{ textAlign: 'center', color: '#888', marginTop: '100px' }}>BAG IS EMPTY</p>}
+            </div>
+            <div style={{ position: 'absolute', bottom: '50px', left: '50px', right: '50px' }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px', fontWeight: 900, fontSize: '1.2rem' }}><span>TOTAL</span><span>{formatPrice(total)}</span></div>
+               <Link to="/checkout" onClick={() => setCartOpen(false)} className="btn-black" style={{ width: '100%', textAlign: 'center', display: 'block' }}>CHECKOUT NOW</Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -323,11 +296,12 @@ const AppContent = () => {
       {!isAdmin && (
         <footer style={{ padding: '100px 0', borderTop: '1px solid #EEE', textAlign: 'center', background: '#F8F8F8' }}>
           <div className="container">
-             <h2 style={{ letterSpacing: '5px', marginBottom: '10px' }}>MINIMALIST</h2>
+             <h2 style={{ letterSpacing: '8px', marginBottom: '10px', fontWeight: 900 }}>MINIMALIST</h2>
              <p className="arabic" style={{ opacity: 0.5, marginBottom: '40px' }}>دبي - الإمارات العربية المتحدة</p>
-             <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', fontSize: '0.8rem', fontWeight: 700 }}>
-                <Link to="/">PRIVACY</Link><Link to="/">TERMS</Link><Link to="/">CONTACT</Link>
+             <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', fontSize: '0.8rem', fontWeight: 800 }}>
+                <Link to="/">PRIVACY</Link><Link to="/">TERMS</Link><Link to="/">CONTACT</Link><Link to="/">ABOUT</Link>
              </div>
+             <div style={{ marginTop: '50px', color: '#888', fontSize: '0.7rem' }}>© 2024 MINIMALIST LUXURY RETAIL LLC. ALL RIGHTS RESERVED.</div>
           </div>
         </footer>
       )}
@@ -335,7 +309,7 @@ const AppContent = () => {
   );
 };
 
-function App() {
+export default function App() {
   return (
     <ShopProvider>
       <Router>
@@ -344,5 +318,3 @@ function App() {
     </ShopProvider>
   );
 }
-
-export default App;
