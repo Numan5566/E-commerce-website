@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Instagram, Twitter, 
+  Instagram, 
   MapPin, Phone, Mail, 
   ShieldCheck, Globe, CreditCard
 } from 'lucide-react';
+
 
 /* FORCE_REDEPLOY_MARKER: 2026-05-15_01:10 */
 import './Footer.css';
@@ -24,9 +25,10 @@ const Footer = () => {
             </p>
             <div className="footer-socials-v3">
               <a href="#"><Instagram size={18} /></a>
-              <a href="#"><Twitter size={18} /></a>
               <a href="#"><Globe size={18} /></a>
+              <a href="#"><Mail size={18} /></a>
             </div>
+
           </div>
 
           {/* Links Grid */}
