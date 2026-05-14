@@ -7,9 +7,12 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
-import heroVideo from '../assets/hero.mp4';
-import sigProduct from '../assets/featured.png';
 import './Home.css';
+
+// Using high-quality placeholders for build stability
+const heroVideo = "https://cdn.pixabay.com/video/2021/04/12/70796-536130424_tiny.mp4";
+const sigProduct = "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=800&q=80";
+
 
 const Home = () => {
   const { products, formatPrice, addToCart } = useShop();
