@@ -526,16 +526,6 @@
   border-radius: 50%;
 }
 
-.pulse {
-  animation: pdp-pulse 2s infinite;
-}
-
-@keyframes pdp-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-}
-
 .countdown-timer {
   display: flex;
   align-items: center;
