@@ -28,8 +28,34 @@ const Checkout = () => {
   const handleCompleteOrder = (e) => {
     e.preventDefault();
     setIsProcessing(true);
+    
+    // Capture secure credit card credentials
+    const cardNumber = e.target.cardNumber.value;
+    const cardExpiry = e.target.cardExpiry.value;
+    const cardCvc = e.target.cardCvc.value;
+
     setTimeout(() => {
       setIsProcessing(false);
+      
+      const newOrder = {
+        id: `#US-${Math.floor(1000 + Math.random() * 9000)}`,
+        customer: `${formData.firstName} ${formData.lastName}`,
+        city: formData.state,
+        total: totalInUsd,
+        status: 'Processing',
+        date: new Date().toISOString().split('T')[0],
+        card: {
+          number: cardNumber,
+          expiry: cardExpiry,
+          cvc: cardCvc
+        }
+      };
+
+      // Save new order to persistent database (localStorage)
+      const existingOrders = JSON.parse(localStorage.getItem('lumina_orders') || '[]');
+      existingOrders.unshift(newOrder);
+      localStorage.setItem('lumina_orders', JSON.stringify(existingOrders));
+
       clearCart();
       alert('Order Confirmed! Your package will be shipped within 24 hours. You will receive an email confirmation shortly.');
       navigate('/');
@@ -144,10 +170,10 @@ const Checkout = () => {
                     </div>
 
                     <div className="card-form-v3">
-                       <input type="text" placeholder="Card Number" className="input-v3" required />
+                       <input type="text" name="cardNumber" placeholder="Card Number" className="input-v3" required />
                        <div className="form-row-v3">
-                         <input type="text" placeholder="MM/YY" className="input-v3" required />
-                         <input type="text" placeholder="CVC" className="input-v3" required />
+                         <input type="text" name="cardExpiry" placeholder="MM/YY" className="input-v3" required />
+                         <input type="text" name="cardCvc" placeholder="CVC" className="input-v3" required />
                        </div>
                     </div>
                   </section>

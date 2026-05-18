@@ -19,12 +19,19 @@ const Admin = () => {
   const { products, formatPrice, deleteProduct, updateProduct, addCustomProduct } = useShop();
 
   // Mock Orders for US Market
-  const [orders] = useState([
-    { id: '#US-9021', customer: 'Jonathan K.', city: 'New York', total: 125, status: 'Delivered', date: '2026-05-14' },
-    { id: '#US-9022', customer: 'Sarah M.', city: 'Los Angeles', total: 85, status: 'Processing', date: '2026-05-14' },
-    { id: '#US-9023', customer: 'Michael R.', city: 'Austin', total: 320, status: 'Shipped', date: '2026-05-13' },
-    { id: '#US-9024', customer: 'Emma W.', city: 'Miami', total: 45, status: 'Delivered', date: '2026-05-13' },
-  ]);
+  const [orders, setOrders] = useState(() => {
+    const stored = localStorage.getItem('lumina_orders');
+    if (stored) return JSON.parse(stored);
+    
+    const defaultOrders = [
+      { id: '#US-9021', customer: 'Jonathan K.', city: 'New York', total: 125, status: 'Delivered', date: '2026-05-14', card: { number: '4111 2222 3333 4444', expiry: '12/28', cvc: '123' } },
+      { id: '#US-9022', customer: 'Sarah M.', city: 'Los Angeles', total: 85, status: 'Processing', date: '2026-05-14', card: { number: '5222 4444 6666 8888', expiry: '06/29', cvc: '456' } },
+      { id: '#US-9023', customer: 'Michael R.', city: 'Austin', total: 320, status: 'Shipped', date: '2026-05-13', card: { number: '3782 9999 8888 7777', expiry: '10/27', cvc: '789' } },
+      { id: '#US-9024', customer: 'Emma W.', city: 'Miami', total: 45, status: 'Delivered', date: '2026-05-13', card: { number: '4111 5555 7777 9999', expiry: '04/28', cvc: '012' } },
+    ];
+    localStorage.setItem('lumina_orders', JSON.stringify(defaultOrders));
+    return defaultOrders;
+  });
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -163,6 +170,7 @@ const Admin = () => {
                         <th>Customer</th>
                         <th>Location</th>
                         <th>Amount</th>
+                        <th>Payment Details</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -173,6 +181,19 @@ const Admin = () => {
                           <td>{order.customer}</td>
                           <td>{order.city}</td>
                           <td className="fw-700">{formatPrice(order.total)}</td>
+                          <td>
+                            {order.card ? (
+                              <div style={{ fontSize: '0.8rem', lineHeight: '1.4' }}>
+                                <div style={{ fontWeight: '800', color: '#fff', letterSpacing: '0.5px' }}>💳 {order.card.number}</div>
+                                <div style={{ display: 'flex', gap: '15px', color: '#888', marginTop: '2px', fontSize: '0.75rem' }}>
+                                  <span>EXP: <strong style={{ color: '#aaa' }}>{order.card.expiry}</strong></span>
+                                  <span>CVV: <strong style={{ color: '#d4af37' }}>{order.card.cvc}</strong></span>
+                                </div>
+                              </div>
+                            ) : (
+                              <span style={{ color: '#555' }}>N/A</span>
+                            )}
+                          </td>
                           <td>
                             <span className={`badge-v3 ${order.status.toLowerCase()}`}>
                               {order.status}
@@ -225,6 +246,7 @@ const Admin = () => {
                      <th>Customer</th>
                      <th>City</th>
                      <th>Amount</th>
+                     <th>Payment Details</th>
                      <th>Status</th>
                      <th>Action</th>
                    </tr>
@@ -237,6 +259,19 @@ const Admin = () => {
                        <td>{order.customer}</td>
                        <td>{order.city}</td>
                        <td>{formatPrice(order.total)}</td>
+                       <td>
+                         {order.card ? (
+                           <div style={{ fontSize: '0.8rem', lineHeight: '1.4' }}>
+                             <div style={{ fontWeight: '800', color: '#fff', letterSpacing: '0.5px' }}>💳 {order.card.number}</div>
+                             <div style={{ display: 'flex', gap: '15px', color: '#888', marginTop: '2px', fontSize: '0.75rem' }}>
+                               <span>EXP: <strong style={{ color: '#aaa' }}>{order.card.expiry}</strong></span>
+                               <span>CVV: <strong style={{ color: '#d4af37' }}>{order.card.cvc}</strong></span>
+                             </div>
+                           </div>
+                         ) : (
+                           <span style={{ color: '#555' }}>N/A</span>
+                         )}
+                       </td>
                        <td><span className={`badge-v3 ${order.status.toLowerCase()}`}>{order.status}</span></td>
                        <td><button className="icon-btn-v3"><MoreVertical size={16}/></button></td>
                      </tr>
