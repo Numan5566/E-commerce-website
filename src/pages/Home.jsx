@@ -1,6 +1,6 @@
 /* BUILD_TIMESTAMP: 2026-05-19_02:54 */
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShoppingBag, ShieldCheck, Truck, 
   Zap, ArrowRight, Star, Globe, 
@@ -17,6 +17,18 @@ const sigProduct = "https://images.unsplash.com/photo-1585338107529-13afc5f02586
 const Home = () => {
   const { products, formatPrice, addToCart } = useShop();
   const [activeTab, setActiveTab] = useState('viral');
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    // Show premium Nomad-style popup after 3 seconds on page load
+    const timer = setTimeout(() => {
+      const closed = localStorage.getItem('nomad_voucher_closed');
+      if (!closed) {
+        setShowModal(true);
+      }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const trustItems = [
     { icon: <Truck size={28} />, title: "FREE US SHIPPING", desc: "Fast 2-3 Days Shipping Across USA" },
@@ -293,6 +305,71 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* ─── NOMAD-STYLE NEWSLETTER GIFT MODAL ─── */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div 
+            className="nomad-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div 
+              className="nomad-modal-card"
+              initial={{ scale: 0.9, y: 30 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 30 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            >
+              <button 
+                className="nomad-modal-close"
+                onClick={() => { 
+                  setShowModal(false); 
+                  localStorage.setItem('nomad_voucher_closed', 'true'); 
+                }}
+              >
+                &times;
+              </button>
+              
+              <div 
+                className="nomad-modal-img" 
+                style={{ 
+                  backgroundImage: "url('https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=500&q=80')" 
+                }}
+              ></div>
+              
+              <div className="nomad-modal-content">
+                <span className="nomad-modal-tag">LUMINA TECH CLUB</span>
+                <h3>CLAIM $15 SETUP GIFT</h3>
+                <p>Get a free smart tech desk voucher and exclusive premium US dropshipping alerts when you join the Lumina Minimal circle.</p>
+                
+                <form 
+                  onSubmit={(e) => { 
+                    e.preventDefault(); 
+                    alert('Success! Code "LUMINA15" sent to your email. Apply at checkout for $15 OFF!'); 
+                    setShowModal(false); 
+                    localStorage.setItem('nomad_voucher_closed', 'true'); 
+                  }}
+                >
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email address" 
+                    required 
+                  />
+                  <button type="submit" className="btn-nomad-modal">
+                    Claim Your Free Gift
+                  </button>
+                </form>
+                
+                <span className="nomad-modal-footer">
+                  *Available towards your first purchase. Cannot be combined with other offers.
+                </span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

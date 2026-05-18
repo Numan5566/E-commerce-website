@@ -327,3 +327,159 @@
   .trust-grid-v3 { grid-template-columns: 1fr; }
   .reviews-masonry { grid-template-columns: 1fr; }
 }
+
+/* ─── NOMAD-STYLE EMAIL MODAL ─── */
+.nomad-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.nomad-modal-card {
+  position: relative;
+  background: #111;
+  width: 100%;
+  max-width: 800px;
+  min-height: 480px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nomad-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 2.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.nomad-modal-close:hover {
+  color: #fff;
+}
+
+.nomad-modal-img {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+}
+
+.nomad-modal-content {
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  background: #111;
+}
+
+.nomad-modal-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #d4af37;
+  margin-bottom: 12px;
+}
+
+.nomad-modal-content h3 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.nomad-modal-content p {
+  font-size: 0.85rem;
+  color: #bbb;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.nomad-modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.nomad-modal-content input[type="email"] {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  padding: 14px 24px;
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.nomad-modal-content input[type="email"]:focus {
+  border-color: #d4af37;
+}
+
+.btn-nomad-modal {
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 24px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btn-nomad-modal:hover {
+  transform: translateY(-2px);
+  background: #eaeaea;
+}
+
+.nomad-modal-footer {
+  font-size: 0.6rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Mobile responsive modal styling */
+@media (max-width: 768px) {
+  .nomad-modal-card {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  
+  .nomad-modal-img {
+    height: 180px;
+  }
+  
+  .nomad-modal-content {
+    padding: 30px 24px;
+  }
+  
+  .nomad-modal-content h3 {
+    font-size: 1.8rem;
+  }
+}
