@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: #000;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.85)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600&q=80') no-repeat center center/cover;
 }
 
 .hero-video-v3 {

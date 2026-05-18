@@ -18,12 +18,12 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const { products, formatPrice, deleteProduct, updateProduct, addCustomProduct } = useShop();
 
-  // Mock Orders for UAE Market
+  // Mock Orders for US Market
   const [orders] = useState([
-    { id: '#UAE-9021', customer: 'Ahmed Al-Maktoum', city: 'Dubai', total: 1250, status: 'Delivered', date: '2026-05-14' },
-    { id: '#UAE-9022', customer: 'Sarah Rashid', city: 'Abu Dhabi', total: 850, status: 'Processing', date: '2026-05-14' },
-    { id: '#UAE-9023', customer: 'Omar J.', city: 'Sharjah', total: 3200, status: 'Shipped', date: '2026-05-13' },
-    { id: '#UAE-9024', customer: 'Fatima H.', city: 'Dubai', total: 450, status: 'Delivered', date: '2026-05-13' },
+    { id: '#US-9021', customer: 'Jonathan K.', city: 'New York', total: 125, status: 'Delivered', date: '2026-05-14' },
+    { id: '#US-9022', customer: 'Sarah M.', city: 'Los Angeles', total: 85, status: 'Processing', date: '2026-05-14' },
+    { id: '#US-9023', customer: 'Michael R.', city: 'Austin', total: 320, status: 'Shipped', date: '2026-05-13' },
+    { id: '#US-9024', customer: 'Emma W.', city: 'Miami', total: 45, status: 'Delivered', date: '2026-05-13' },
   ]);
 
   const handleLogin = (e) => {
@@ -44,7 +44,7 @@ const Admin = () => {
       <motion.div className="login-card-v3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
         <div className="login-header-v3">
           <div className="login-logo-v3">L</div>
-          <h1>Lumina UAE Admin</h1>
+          <h1>Lumina US Admin</h1>
           <p>Secure Enterprise Portal</p>
         </div>
         <form onSubmit={handleLogin}>
@@ -66,7 +66,7 @@ const Admin = () => {
           <div className="sidebar-logo-v3">L</div>
           <div>
             <h3>Lumina HQ</h3>
-            <span>UAE Division</span>
+            <span>US Division</span>
           </div>
         </div>
 
@@ -103,7 +103,7 @@ const Admin = () => {
             <input type="text" placeholder="Search orders, products, customers..." />
           </div>
           <div className="header-actions-v3">
-             <div className="region-badge-v3"><Globe size={14}/> UAE MARKET LIVE</div>
+             <div className="region-badge-v3"><Globe size={14}/> US MARKET LIVE</div>
              <div className="admin-user-v3">Admin User</div>
           </div>
         </header>
@@ -125,7 +125,7 @@ const Admin = () => {
                   <div className="stat-info-v3">
                     <label>Active Orders</label>
                     <h3>18</h3>
-                    <span className="trend-up">4 pending Dubai</span>
+                    <span className="trend-up">4 pending New York</span>
                   </div>
                 </div>
                 <div className="stat-v3">
@@ -140,8 +140,8 @@ const Admin = () => {
                   <div className="stat-icon-v3" style={{ background: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}><MapPin size={24}/></div>
                   <div className="stat-info-v3">
                     <label>Top Region</label>
-                    <h3>Dubai</h3>
-                    <span>65% of total sales</span>
+                    <h3>New York</h3>
+                    <span>45% of total sales</span>
                   </div>
                 </div>
               </div>
@@ -149,7 +149,7 @@ const Admin = () => {
               <div className="dashboard-grid-v3">
                 <div className="card-v3 orders-card">
                   <div className="card-header-v3">
-                    <h3>Recent UAE Orders</h3>
+                    <h3>Recent US Orders</h3>
                     <button className="btn-v3">View All</button>
                   </div>
                   <table className="table-v3">
@@ -188,8 +188,8 @@ const Admin = () => {
                      <div className="alert-item-v3">
                        <AlertCircle size={16} color="#ef4444" />
                        <div>
-                         <p>Lumina Air Gen 2 is Low Stock</p>
-                         <span>Only 3 units left in Dubai warehouse</span>
+                         <p>PowerStation Pro is Low Stock</p>
+                         <span>Only 3 units left in NY warehouse</span>
                        </div>
                      </div>
                      <div className="alert-item-v3">

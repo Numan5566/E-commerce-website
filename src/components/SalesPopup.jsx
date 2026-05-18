@@ -4,8 +4,8 @@ import { useShop } from '../context/ShopContext';
 import { CheckCircle } from 'lucide-react';
 import './SalesPopup.css';
 
-const locations = ["Dubai, UAE", "Abu Dhabi, UAE", "Sharjah, UAE", "Ajman, UAE", "Dubai Marina", "Downtown Dubai", "Al Reem Island"];
-const names = ["Ahmed A.", "Sarah R.", "Omar J.", "Fatima H.", "Zayed M.", "Laila S."];
+const locations = ["New York, NY", "Los Angeles, CA", "Austin, TX", "Miami, FL", "Chicago, IL", "Houston, TX", "San Francisco, CA", "Seattle, WA", "Boston, MA", "Denver, CO"];
+const names = ["John K.", "Sarah M.", "Michael R.", "Emma W.", "David L.", "Jessica H.", "Robert P.", "Ashley S."];
 const times = ["2 minutes ago", "5 minutes ago", "Just now", "12 minutes ago", "1 hour ago"];
 
 const SalesPopup = () => {

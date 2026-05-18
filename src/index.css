@@ -249,37 +249,72 @@ h1, h2, h3, h4 {
 
 /* ─── COLLECTION GRIDS ─── */
 .collection-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  justify-content: space-between;
   gap: 15px;
   margin-top: 40px;
 }
 
 .collection-item {
+  flex: 1;
   text-align: center;
   text-decoration: none;
   color: #000;
+  max-width: 19%;
 }
 
 .collection-item img {
   width: 100%;
-  height: 300px;
+  aspect-ratio: 1/1.2;
   object-fit: cover;
   border-radius: 2px;
-  transition: transform 0.5s ease;
-}
-
-.collection-item:hover img {
-  transform: scale(1.03);
+  background: #f4f4f4;
 }
 
 .collection-item span {
   display: block;
   margin-top: 15px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   text-transform: uppercase;
+}
+
+/* ─── SPLIT BANNERS ─── */
+.split-banner-container {
+  display: flex;
+  width: 100%;
+  height: 700px;
+}
+
+.split-banner {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.split-banner img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.split-banner h2, .split-banner button {
+  position: relative;
+  z-index: 2;
+}
+
+.split-banner h2 {
+  font-size: 3rem;
+  letter-spacing: 10px;
+  margin-bottom: 30px;
 }
 
 /* ─── FEATURE SLIDER ─── */
@@ -303,6 +338,21 @@ h1, h2, h3, h4 {
   object-fit: cover;
 }
 
+/* ─── PREMIUM FOOTER ─── */
+.premium-footer {
+  background: #000;
+  color: #fff;
+  padding: 80px 0 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.5fr;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
 /* ─── REVIEW CARDS ─── */
 .review-section {
   padding: 100px 0;
@@ -316,7 +366,7 @@ h1, h2, h3, h4 {
   margin-top: 50px;
   overflow-x: auto;
   padding: 20px;
-  scrollbar-width: none; /* Hide scrollbar for clean look */
+  scrollbar-width: none;
 }
 
 .review-grid::-webkit-scrollbar {
@@ -356,4 +406,98 @@ h1, h2, h3, h4 {
   color: #555;
   line-height: 1.6;
   margin-bottom: 15px;
+}
+
+.footer-col h4 {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+  color: #fff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+.footer-col ul li a:hover {
+  opacity: 1;
+}
+
+.contact-info {
+  font-size: 0.65rem;
+  line-height: 1.8;
+  opacity: 0.8;
+  margin: 20px 0;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.newsletter-input {
+  background: #fff;
+  color: #000;
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  font-size: 0.75rem;
+  margin-bottom: 15px;
+  text-align: right; /* For Arabic text as in screenshot */
+}
+
+.currency-selector {
+  background: #fff;
+  color: #000;
+  width: 100%;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 30px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.payment-logos {
+  display: flex;
+  gap: 15px;
+  opacity: 0.8;
+}
+
+.payment-logos img {
+  height: 20px;
 }
