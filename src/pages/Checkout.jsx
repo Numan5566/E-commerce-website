@@ -9,6 +9,7 @@ const Checkout = () => {
   const { cart, formatPrice, clearCart, region } = useShop();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [orderId, setOrderId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,12 +34,14 @@ const Checkout = () => {
     const cardNumber = e.target.cardNumber.value;
     const cardExpiry = e.target.cardExpiry.value;
     const cardCvc = e.target.cardCvc.value;
-
     setTimeout(() => {
       setIsProcessing(false);
+      const generatedId = `#US-${Math.floor(1000 + Math.random() * 9000)}`;
+      localStorage.setItem('last_order_id', generatedId);
+      setOrderId(generatedId);
       
       const newOrder = {
-        id: `#US-${Math.floor(1000 + Math.random() * 9000)}`,
+        id: generatedId,
         customer: `${formData.firstName} ${formData.lastName}`,
         city: formData.state,
         total: totalInUsd,
@@ -56,9 +59,7 @@ const Checkout = () => {
       existingOrders.unshift(newOrder);
       localStorage.setItem('lumina_orders', JSON.stringify(existingOrders));
 
-      clearCart();
-      alert('Order Confirmed! Your package will be shipped within 24 hours. You will receive an email confirmation shortly.');
-      navigate('/');
+      setStep(4);
     }, 2500);
   };
 
@@ -69,7 +70,7 @@ const Checkout = () => {
     'Indiana', 'Tennessee', 'Missouri', 'Maryland', 'Wisconsin'
   ];
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && step !== 4) {
     return (
       <div className="checkout-empty-v3 container">
         <h2>Your Bag is Empty</h2>
@@ -185,41 +186,96 @@ const Checkout = () => {
                   </div>
                 </motion.div>
               )}
+
+              {step === 4 && (
+                <motion.div 
+                  key="s4" 
+                  initial={{ opacity: 0, scale: 0.95 }} 
+                  animate={{ opacity: 1, scale: 1 }} 
+                  className="thank-you-box-v3"
+                  style={{ textAlign: 'center', padding: '40px 20px', width: '100%', maxWidth: '600px', margin: '0 auto' }}
+                >
+                  <div className="thank-you-badge" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#10b981', color: '#fff', width: '60px', height: '60px', borderRadius: '50%', marginBottom: '20px' }}>
+                    <ShieldCheck size={36} />
+                  </div>
+                  <h2 style={{ fontSize: '1.8rem', fontWeight: 900, letterSpacing: '1px', marginBottom: '10px' }}>THANK YOU FOR YOUR PURCHASE!</h2>
+                  <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: '30px' }}>
+                    Your order <strong style={{ color: '#000' }}>{orderId || localStorage.getItem('last_order_id')}</strong> is confirmed and being prepared for shipment.
+                  </p>
+
+                  <div className="order-details-card" style={{ background: '#fafafa', border: '1px solid #eee', borderRadius: '8px', padding: '20px', textAlign: 'left', margin: '0 auto 30px auto', maxWidth: '500px' }}>
+                    <h4 style={{ margin: '0 0 15px 0', borderBottom: '1px solid #eee', paddingBottom: '10px', fontSize: '0.8rem', letterSpacing: '1px' }}>ORDER DETAILS</h4>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.85rem' }}>
+                      <span style={{ color: '#888' }}>Order Status:</span>
+                      <strong style={{ color: '#10b981' }}>Processing</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.85rem' }}>
+                      <span style={{ color: '#888' }}>Shipping Method:</span>
+                      <strong>US Express (2-3 Business Days)</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.85rem' }}>
+                      <span style={{ color: '#888' }}>Estimated Delivery:</span>
+                      <strong>{new Date(Date.now() + 3*24*60*60*1000).toDateString()}</strong>
+                    </div>
+                  </div>
+
+                  <div className="shipping-address-summary" style={{ textAlign: 'left', margin: '0 auto 40px auto', maxWidth: '500px', border: '1px solid #eee', borderRadius: '8px', padding: '20px' }}>
+                    <h4 style={{ margin: '0 0 10px 0', fontSize: '0.8rem', letterSpacing: '1px' }}>SHIPPING TO</h4>
+                    <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem', fontWeight: 600 }}>{formData.firstName} {formData.lastName}</p>
+                    <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem', color: '#666' }}>{formData.address}</p>
+                    <p style={{ margin: '0', fontSize: '0.85rem', color: '#666' }}>{formData.state}, {formData.zipCode}</p>
+                  </div>
+
+                  <button 
+                    type="button"
+                    className="btn-primary-v3" 
+                    onClick={() => {
+                      clearCart();
+                      navigate('/');
+                    }} 
+                    style={{ padding: '15px 40px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '1px', cursor: 'pointer' }}
+                  >
+                    Continue Shopping
+                  </button>
+                </motion.div>
+              )}
             </AnimatePresence>
           </form>
         </div>
 
         {/* ─── RIGHT: Order Summary ─── */}
-        <div className="checkout-sidebar-v3">
-          <div className="sidebar-inner-v3">
-            <h3>Order Summary</h3>
-            <div className="sidebar-items-v3">
-              {cart.map(item => (
-                <div key={item.id} className="si-item-v3">
-                  <div className="si-img-v3">
-                    <img src={item.image} alt={item.name} />
-                    <span>{item.qty}</span>
+        {step !== 4 && (
+          <div className="checkout-sidebar-v3">
+            <div className="sidebar-inner-v3">
+              <h3>Order Summary</h3>
+              <div className="sidebar-items-v3">
+                {cart.map(item => (
+                  <div key={item.id} className="si-item-v3">
+                    <div className="si-img-v3">
+                      <img src={item.image} alt={item.name} />
+                      <span>{item.qty}</span>
+                    </div>
+                    <div className="si-info-v3">
+                      <p>{item.name}</p>
+                      <span>{formatPrice(item.price)}</span>
+                    </div>
                   </div>
-                  <div className="si-info-v3">
-                    <p>{item.name}</p>
-                    <span>{formatPrice(item.price)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="sidebar-totals-v3">
-              <div className="st-row-v3"><span>Subtotal</span> <span>{formatPrice(subtotalInUsd)}</span></div>
-              <div className="st-row-v3"><span>Shipping</span> <span className="shipping-gold">{shippingInUsd === 0 ? 'FREE' : formatPrice(shippingInUsd)}</span></div>
-              <div className="st-row-v3 total-v3"><span>Total Due</span> <span>{formatPrice(totalInUsd)}</span></div>
-            </div>
+              <div className="sidebar-totals-v3">
+                <div className="st-row-v3"><span>Subtotal</span> <span>{formatPrice(subtotalInUsd)}</span></div>
+                <div className="st-row-v3"><span>Shipping</span> <span className="shipping-gold">{shippingInUsd === 0 ? 'FREE' : formatPrice(shippingInUsd)}</span></div>
+                <div className="st-row-v3 total-v3"><span>Total Due</span> <span>{formatPrice(totalInUsd)}</span></div>
+              </div>
 
-            <div className="checkout-trust-v3">
-               <div className="trust-item-v3"><ShieldCheck size={18}/> <span>100% Authentic Products</span></div>
-               <div className="trust-item-v3"><Truck size={18}/> <span>Fast US Express Shipping</span></div>
+              <div className="checkout-trust-v3">
+                 <div className="trust-item-v3"><ShieldCheck size={18}/> <span>100% Authentic Products</span></div>
+                 <div className="trust-item-v3"><Truck size={18}/> <span>Fast US Express Shipping</span></div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

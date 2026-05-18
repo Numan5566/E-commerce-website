@@ -13,6 +13,7 @@ export const ShopProvider = ({ children }) => {
     { code: 'EU', name: 'Europe', currency: 'EUR', symbol: '€', rate: 0.92, flag: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg' }
   ]);
   const [region, setRegion] = useState(regions[0]);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const addToCart = (product) => {
     setCart(prev => {
@@ -20,6 +21,7 @@ export const ShopProvider = ({ children }) => {
       if (exists) return prev.map(i => i.id === product.id ? { ...i, qty: i.qty + 1 } : i);
       return [...prev, { ...product, qty: 1 }];
     });
+    setCartOpen(true);
   };
 
   const removeFromCart = (id) => setCart(prev => prev.filter(i => i.id !== id));
@@ -47,7 +49,9 @@ export const ShopProvider = ({ children }) => {
       cartCount, 
       region, 
       setRegion, 
-      regions 
+      regions,
+      cartOpen,
+      setCartOpen
     }}>
       {children}
     </ShopContext.Provider>

@@ -141,7 +141,7 @@ const Footer = () => {
 };
 
 const AppContent = () => {
-  const [cartOpen, setCartOpen] = useState(false);
+  const { cartOpen, setCartOpen } = useShop();
   const location = useLocation();
 
   // Scroll to top on route change

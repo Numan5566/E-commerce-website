@@ -19,6 +19,30 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState('viral');
   const [showModal, setShowModal] = useState(false);
 
+  // Modern slideshow content cards
+  const heroSlides = [
+    {
+      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600&q=80",
+      eyebrow: "AMERICA'S PREMIUM TECH DESTINATION",
+      title: "ELEVATE YOUR\nMODERN LIFESTYLE",
+      desc: "Experience the next generation of minimalist luxury tech and lifestyle winners. Engineered for performance, designed for the modern visionary."
+    },
+    {
+      image: "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=1600&q=80",
+      eyebrow: "SMART GADGETS & VISIONARY DESIGNS",
+      title: "CRAFT THE PERFECT\nDESK WORKSPACE",
+      desc: "Unleash your productivity with modular charging stands, authentic wood organizer setups, and ultra-fast GaN chargers."
+    },
+    {
+      image: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=1600&q=80",
+      eyebrow: "CYBERPUNK DROPS & VIRAL WINNERS",
+      title: "FUTURE TECH IN\nYOUR HANDS TODAY",
+      desc: "Browse our viral collection of smart nixie tubes, interactive speaker systems, and high-performance MagSafe accessories."
+    }
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   useEffect(() => {
     // Show premium Nomad-style popup after 3 seconds on page load
     const timer = setTimeout(() => {
@@ -27,7 +51,16 @@ const Home = () => {
         setShowModal(true);
       }
     }, 3000);
-    return () => clearTimeout(timer);
+
+    // Automatically transition to next slide every 5 seconds
+    const slideInterval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % heroSlides.length);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(slideInterval);
+    };
   }, []);
 
   const trustItems = [
@@ -44,18 +77,50 @@ const Home = () => {
 
   return (
     <div className="home-v3">
-      {/* ─── CINEMATIC HERO ─── */}
-      <section className="hero-v3">
+      {/* ─── CINEMATIC HERO SLIDESHOW ─── */}
+      <section 
+        className="hero-v3"
+        style={{ 
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.8)), url(${heroSlides[currentSlide].image})`,
+          transition: 'background-image 0.8s ease-in-out',
+          position: 'relative'
+        }}
+      >
         <div className="hero-content-v3">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="section-eyebrow">AMERICA'S PREMIUM TECH DESTINATION</span>
-            <h1>ELEVATE YOUR <br />MODERN LIFESTYLE</h1>
-            <p>Experience the next generation of minimalist luxury tech and lifestyle winners. Engineered for performance, designed for the modern visionary.</p>
-            <div className="hero-actions">
-              <Link to="/shop" className="btn-primary-v3">Shop New Collection</Link>
-              <Link to="/shop" className="btn-outline-v3">Explore Best Sellers</Link>
-            </div>
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={currentSlide}
+              initial={{ opacity: 0, y: 15 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="section-eyebrow">{heroSlides[currentSlide].eyebrow}</span>
+              <h1 style={{ whiteSpace: 'pre-line' }}>{heroSlides[currentSlide].title}</h1>
+              <p>{heroSlides[currentSlide].desc}</p>
+              <div className="hero-actions">
+                <Link to="/shop" className="btn-primary-v3">Shop New Collection</Link>
+                <Link to="/shop" className="btn-outline-v3">Explore Best Sellers</Link>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Slide Indicators */}
+        <div style={{ position: 'absolute', bottom: '30px', display: 'flex', gap: '10px', zIndex: 10 }}>
+          {heroSlides.map((_, index) => (
+            <div 
+              key={index} 
+              onClick={() => setCurrentSlide(index)}
+              style={{
+                width: '30px',
+                height: '3px',
+                background: currentSlide === index ? '#fff' : 'rgba(255,255,255,0.3)',
+                cursor: 'pointer',
+                transition: 'background 0.3s'
+              }}
+            />
+          ))}
         </div>
       </section>
 
