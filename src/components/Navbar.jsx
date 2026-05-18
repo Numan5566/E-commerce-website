@@ -74,7 +74,6 @@ const Navbar = ({ onCartOpen }) => {
             </div>
 
             <button className="nav-action-btn-v3"><Search size={18} /></button>
-            <Link to="/admin" className="nav-action-btn-v3"><User size={18} /></Link>
             
             <button className="nav-action-btn-v3" onClick={onCartOpen}>
               <ShoppingBag size={18} />
@@ -98,7 +97,6 @@ const Navbar = ({ onCartOpen }) => {
                 <Link to="/shop">NEW ARRIVALS</Link>
                 <Link to="/shop">BEST SELLERS</Link>
                 <Link to="/shop">OUR STORY</Link>
-                <Link to="/admin">ADMIN PORTAL</Link>
               </div>
             </motion.div>
           )}

@@ -28,7 +28,8 @@ const Admin = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (passInput === 'admin123') {
+    const masterPass = localStorage.getItem('admin_master_password') || 'admin123';
+    if (passInput === masterPass) {
       setIsLoggedIn(true);
       localStorage.setItem('admin_auth', 'true');
     } else alert('Access Denied');
@@ -85,6 +86,9 @@ const Admin = () => {
           </button>
           <button className={activeTab === 'analytics' ? 'active' : ''} onClick={() => setActiveTab('analytics')}>
             <BarChart3 size={18} /> Analytics
+          </button>
+          <button className={activeTab === 'accounts' ? 'active' : ''} onClick={() => setActiveTab('accounts')}>
+            <Settings size={18} /> Accounts
           </button>
         </nav>
 
@@ -264,6 +268,64 @@ const Admin = () => {
                 ))}
               </div>
             </div>
+          )}
+
+          {activeTab === 'accounts' && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card-v3 settings-card">
+              <div className="card-header-v3">
+                <h2>Admin Account Credentials</h2>
+                <p style={{ color: '#888', fontSize: '0.85rem', marginTop: '5px' }}>
+                  Change your secure master access password for the Lumina Enterprise Portal.
+                </p>
+              </div>
+              
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const currentSaved = localStorage.getItem('admin_master_password') || 'admin123';
+                  const currentInput = e.target.currentPassword.value;
+                  const newPass = e.target.newPassword.value;
+                  const confirmPass = e.target.confirmPassword.value;
+                  
+                  if (currentInput !== currentSaved) {
+                    alert('Error: Current password is incorrect.');
+                    return;
+                  }
+                  if (newPass !== confirmPass) {
+                    alert('Error: New passwords do not match.');
+                    return;
+                  }
+                  if (newPass.length < 4) {
+                    alert('Error: New password must be at least 4 characters long.');
+                    return;
+                  }
+                  
+                  localStorage.setItem('admin_master_password', newPass);
+                  alert('Success! Master password has been securely updated.');
+                  e.target.reset();
+                }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '400px', marginTop: '30px' }}
+              >
+                <div className="input-group-v3">
+                  <label style={{ display: 'block', color: '#ccc', fontSize: '0.8rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Password</label>
+                  <input type="password" name="currentPassword" placeholder="••••••••" style={{ width: '100%', background: '#222', border: '1px solid #333', borderRadius: '8px', padding: '12px 16px', color: '#fff', outline: 'none' }} required />
+                </div>
+                
+                <div className="input-group-v3">
+                  <label style={{ display: 'block', color: '#ccc', fontSize: '0.8rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>New Password</label>
+                  <input type="password" name="newPassword" placeholder="••••••••" style={{ width: '100%', background: '#222', border: '1px solid #333', borderRadius: '8px', padding: '12px 16px', color: '#fff', outline: 'none' }} required />
+                </div>
+                
+                <div className="input-group-v3">
+                  <label style={{ display: 'block', color: '#ccc', fontSize: '0.8rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Confirm New Password</label>
+                  <input type="password" name="confirmPassword" placeholder="••••••••" style={{ width: '100%', background: '#222', border: '1px solid #333', borderRadius: '8px', padding: '12px 16px', color: '#fff', outline: 'none' }} required />
+                </div>
+                
+                <button type="submit" className="login-btn-v3" style={{ width: 'auto', padding: '12px 30px', background: '#fff', color: '#000', borderRadius: '30px', border: 'none', fontWeight: '800', cursor: 'pointer', transition: 'background 0.2s', marginTop: '10px' }}>
+                  Update Credentials
+                </button>
+              </form>
+            </motion.div>
           )}
         </div>
       </main>

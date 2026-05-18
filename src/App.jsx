@@ -41,7 +41,6 @@ const Header = ({ onCartOpen }) => {
         </Link>
         <div style={{ display: 'flex', gap: '15px', justifyContent: 'flex-end', alignItems: 'center', fontSize: '0.6rem', fontWeight: 800 }}>
           <Link to="/shop" style={{ color: '#000', textDecoration: 'none' }}>SHOP</Link>
-          <Link to="/admin" style={{ color: '#000', textDecoration: 'none' }}>ADMIN</Link>
           
           {/* Region selector dropdown */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }} className="nav-region-selector">
